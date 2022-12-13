@@ -1,16 +1,18 @@
-
-import dash
-from dash import dcc, html, dash_table, callback
-from dash.dependencies import Input, Output, State
 import os
 import io
+import dash
 import base64
+import logging
 import datetime
 import pandas as pd
 import plotly.express as px
 import dataset.dataset as dataset
 
+from dash import dcc, html, dash_table, callback
+from dash.dependencies import Input, Output, State
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -27,16 +29,16 @@ app.layout = html.Div([
             html.A('Select Files')
         ]),
         #className='upload-data',
-        # style={
-        #     'width': '100%',
-        #     'height': '60px',
-        #     'lineHeight': '60px',
-        #     'borderWidth': '1px',
-        #     'borderStyle': 'dashed',
-        #     'borderRadius': '5px',
-        #     'textAlign': 'center',
-        #     'margin': '10px'
-        # },
+        style={
+            'width': '100%',
+            'height': '60px',
+            'lineHeight': '60px',
+            'borderWidth': '1px',
+            'borderStyle': 'dashed',
+            'borderRadius': '5px',
+            'textAlign': 'center',
+            'margin': '10px'
+        },
         multiple=True
     ),
     html.Div(id='output-data-upload'),
@@ -48,15 +50,36 @@ def parse_contents(contents, filename, date):
     try:
         if 'csv' in filename:
             csv_file = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
-            df = dataset.Dataset(filename, csv_file, {'height': 'ft', 'vel': 'mph'})
-            print(df)
+            dataframe = dataset.Dataset(filename, csv_file)
+            logging.info(dataframe)
+            logging.info(dataframe.get_metrics())
+            logging.info(dataframe.get_df())
         elif 'xls' in filename:
             df = pd.read_excel(io.BytesIO(decoded))
     except Exception as e:
-        print(e)
+        logging.error(f"{e}")
         return html.Div([
-            'There was an error processing this file.'
+            f'There was an error processing this file.'
         ])
+
+    return html.Div([
+        html.H5(filename),
+        html.H6(datetime.datetime.fromtimestamp(date)),
+
+        dash_table.DataTable(
+            dataframe.get_df().to_dict('records'),
+            [{'name': i, 'id': i} for i in dataframe.get_df().columns]
+        ),
+
+        html.Hr(),  # horizontal line
+
+        # For debugging, display the raw contents provided by the web browser
+        html.Div('Raw Content'),
+        html.Pre(contents[0:200] + '...', style={
+            'whiteSpace': 'pre-wrap',
+            'wordBreak': 'break-all'
+        })
+    ])
 
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
@@ -71,3 +94,4 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+

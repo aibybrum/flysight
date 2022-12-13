@@ -6,14 +6,14 @@ import itertools
 import dataset.helpers as helpers
 
 class Dataset:
-    def __init__(self, name, df, metrics):
+    def __init__(self, name, df, metrics={'height': 'ft', 'vel': 'km/u'}):
         self.name = name
-        self.df = df 
-        self.metrics = metrics
-        self.df_con = self.convert()
-
+        self.old_df = df 
+        self.df = None
+        self.metrics = self.set_metrics(metrics)
+        
     def get_total_seconds(self):
-        datetimes = [pd.to_datetime(d) for d in self.df.time]
+        datetimes = [pd.to_datetime(d) for d in self.old_df.time]
         l = []
         for i, d in enumerate(datetimes):
             duration = datetimes[i] - datetimes[0]
@@ -29,80 +29,89 @@ class Dataset:
         return elevation
         
     def get_earth_elevation(self, metric):
-        l = []
-        divided_dataset = list(helpers.divide_dataset(self.df, 150))
-        for i in range(0, len(divided_dataset)):
-            l.append(self.request_earth_elevation(divided_dataset[i]).values)
+        divided_dataset = list(helpers.divide_dataset(self.old_df, 150))
+        l = [self.request_earth_elevation(divided_dataset[i]).values for i in range(0, len(divided_dataset))]
         if metric == 'ft':
             return [helpers.meters_to_feet(e) for e in list(itertools.chain(*l))]
         elif metric == 'm':
             return list(itertools.chain(*l))
 
     def get_dynamic_elevation(self, metric):
-        ground_elevation = helpers.meters_to_feet(self.df.hMSL.iloc[-1]) if metric == 'ft' else self.df.hMSL.iloc[-1]
+        ground_elevation = helpers.meters_to_feet(self.old_df.hMSL.iloc[-1]) if metric == 'ft' else self.old_df.hMSL.iloc[-1]
         earth_elevation = self.get_earth_elevation(metric)
-        l = []
-        for i in range(0, len(self.df.hMSL)):
-            if metric == 'ft':
-                l.append(helpers.meters_to_feet(self.df.hMSL[i]) - ground_elevation - earth_elevation[i])
-            elif metric == 'm':
-                l.append(self.df.hMSL[i] - ground_elevation - earth_elevation[i])
-        return l
+        if metric == 'ft':
+            return [helpers.meters_to_feet(self.old_df.hMSL[i]) - ground_elevation - earth_elevation[i] for i in range(0, len(self.old_df.hMSL))]
+        elif metric == 'm':
+            return [self.old_df.hMSL[i] - ground_elevation - earth_elevation[i] for i in range(0, len(self.old_df.hMSL))]
+        else:
+            raise ValueError('Invalid metric')
 
     def get_fixed_elevation(self, elevation, metric):
-        ground_elevation = helpers.meters_to_feet(self.df.hMSL.iloc[-1]) if metric == 'ft' else self.df.hMSL.iloc[-1]
-        l = []
-        for i in range(0, len(self.df.hMSL)):
-            if metric == 'ft':
-                l.append(helpers.meters_to_feet(self.df.hMSL[i]) - ground_elevation - elevation)
-            elif metric == 'm':
-                l.append(self.df.hMSL[i] - ground_elevation - elevation)
-        return l
+        ground_elevation = helpers.meters_to_feet(self.old_df.hMSL.iloc[-1]) if metric == 'ft' else self.old_df.hMSL.iloc[-1]
+        if metric == 'ft':
+            return [helpers.meters_to_feet(self.old_df.hMSL[i]) - ground_elevation - elevation for i in range(0, len(self.old_df.hMSL))]
+        elif metric == 'm':
+            return [self.old_df.hMSL[i] - ground_elevation - elevation for i in range(0, len(self.old_df.hMSL))]
+        else:
+            raise ValueError('Invalid metric')
 
     def get_vertical_speed(self, metric='mph'):
         if metric == 'mph':
-            return [helpers.meterpersecond_to_milesperhour(meter) for meter in self.df.velD]
+            return [helpers.meterpersecond_to_milesperhour(meter) for meter in self.old_df.velD]
         elif metric == 'km/u':
-            return [helpers.meterpersecond_to_kilometersperhour(meter) for meter in self.df.velD]
+            return [helpers.meterpersecond_to_kilometersperhour(meter) for meter in self.old_df.velD]
+        else:
+            raise ValueError('Invalid metric')
 
     def get_horizontal_speed(self, metric='mph'):
-        l = []
-        for i in range(0,len(self.df)):
-            speed = helpers.calc_horizontal_speed(self.df.velN[i], self.df.velE[i])
-            if metric == 'mph':
-                l.append(helpers.meterpersecond_to_milesperhour(speed))
-            elif metric == 'km/u':
-                l.append(helpers.meterpersecond_to_kilometersperhour(speed))
-        return l
+        speed = [helpers.calc_horizontal_speed(self.old_df.velN[i], self.old_df.velE[i]) for i in range(0, len(self.old_df))]
+        if metric == 'mph':
+            return [helpers.meterpersecond_to_milesperhour(s) for s in speed]
+        elif metric == 'km/u':
+            return [helpers.meterpersecond_to_kilometersperhour(s) for s in speed]
+        else:
+            raise ValueError('Invalid metric')
 
     def get_dive_angle(self, v_speed, h_speed):
-        l = []
-        for i in range(0, len(self.df)):
-            l.append(helpers.calc_dive_angle(v_speed[i], h_speed[i]))
-        return l
+        return [helpers.calc_dive_angle(v_speed[i], h_speed[i]) for i in range(0, len(self.old_df))]
 
     def get_horizontal_distance(self, metric):
         l, f = [0], 0.0
-        for i in range(0, len(self.df)-1):
-            f += helpers.calc_distance(self.df.lat[i], self.df.lat[i+1], self.df.lon[i], self.df.lon[i+1], metric)
+        for i in range(0, len(self.old_df)-1):
+            f += helpers.calc_distance(self.old_df.lat[i], self.old_df.lat[i+1], self.old_df.lon[i], self.old_df.lon[i+1], metric)
             l.append(f)
         return l
 
-    def convert(self):
-        return pd.DataFrame({'time': np.array(self.get_total_seconds()),
-                            'lat': self.df.lat,
-                            'lon': self.df.lon,
-                            'dynamic_elevation': self.get_dynamic_elevation(self.metrics['height']),
-                            'fixed_elevation': self.get_fixed_elevation(0, self.metrics['height']),
-                            'horizontal_distance': self.get_horizontal_distance(self.metrics['height']),
-                            'vertical_speed': self.get_vertical_speed(self.metrics['vel']),
-                            'horizontal_speed': self.get_horizontal_speed(self.metrics['vel']),
-                            'dive_angle': self.get_dive_angle(self.get_vertical_speed(), self.get_horizontal_speed())})
-
+    def update_df(self):
+        return pd.DataFrame({
+            'time': np.array(self.get_total_seconds()),
+            'lat': self.old_df.lat,
+            'lon': self.old_df.lon,
+            'dynamic_elevation': self.get_dynamic_elevation(self.metrics['height']),
+            'fixed_elevation': self.get_fixed_elevation(0, self.metrics['height']),
+            'horizontal_distance': self.get_horizontal_distance(self.metrics['height']),
+            'vertical_speed': self.get_vertical_speed(self.metrics['vel']),
+            'horizontal_speed': self.get_horizontal_speed(self.metrics['vel']),
+            'dive_angle': self.get_dive_angle(self.get_vertical_speed(), self.get_horizontal_speed())})
+    
     def copy(self):
-        self.df_con.to_csv(f'.\\data\\test-v1-{self.name}')
+        self.df.to_csv(f'.\\data\\test-v1-{self.name}')
+
+    def get_metrics(self):
+        return self.metrics
+
+    def set_metrics(self, value):
+        if value['height'] == 'm' or value['height'] == 'ft':
+            if value['vel'] == 'km/u' or value['vel'] == 'mph':
+                self.metrics = value
+                self.df = self.update_df()
+        else: 
+            raise ValueError('Invalid metric')
+
+    def get_df(self):
+        return self.df
 
     def __str__ (self):
-            return f'{self.name}: {self.df_con}'
+            return f'{self.name}'
 
     
