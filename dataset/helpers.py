@@ -22,7 +22,7 @@ def calc_horizontal_speed(n, e):
 def calc_dive_angle(v_speed, h_speed):
         return degrees(atan(v_speed/h_speed))
 
-def calc_distance(lat1, lat2, lon1, lon2, metric):
+def calc_distance(lat1, lat2, lon1, lon2):
     lon1 = radians(lon1)
     lon2 = radians(lon2)
     lat1 = radians(lat1)
@@ -39,7 +39,4 @@ def calc_distance(lat1, lat2, lon1, lon2, metric):
     r = 6371
     
     # calculate the result
-    if metric == 'ft':
-        return meters_to_feet((c * r) * 1000)
-    elif metric == 'm':
-        return (c * r) * 1000
+    return meters_to_feet((c * r) * 1000)

@@ -48,14 +48,9 @@ def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
     decoded = base64.b64decode(content_string)
     try:
-        if 'csv' in filename:
+        if 'csv' or 'CSV' in filename:
             csv_file = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
-            dataframe = dataset.Dataset(filename, csv_file)
-            logging.info(dataframe)
-            logging.info(dataframe.get_metrics())
-            logging.info(dataframe.get_df())
-        elif 'xls' in filename:
-            df = pd.read_excel(io.BytesIO(decoded))
+            df = dataset.Dataset(filename, csv_file)
     except Exception as e:
         logging.error(f"{e}")
         return html.Div([
@@ -67,8 +62,8 @@ def parse_contents(contents, filename, date):
         html.H6(datetime.datetime.fromtimestamp(date)),
 
         dash_table.DataTable(
-            dataframe.get_df().to_dict('records'),
-            [{'name': i, 'id': i} for i in dataframe.get_df().columns]
+            df.get_df().to_dict('records'),
+            [{'name': i, 'id': i} for i in df.get_df().columns]
         ),
 
         html.Hr(),  # horizontal line
