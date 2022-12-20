@@ -1,4 +1,5 @@
 from math import radians, cos, sin, asin, sqrt, degrees, atan
+import geopy.distance
 
 def divide_dataset(l, n):
         for i in range(0, len(l), n):
@@ -20,23 +21,12 @@ def calc_horizontal_speed(n, e):
         return sqrt((n**2) + (e**2))
 
 def calc_dive_angle(v_speed, h_speed):
+    try:
         return degrees(atan(v_speed/h_speed))
+    except ZeroDivisionError:
+        return 0   
 
-def calc_distance(lat1, lat2, lon1, lon2):
-    lon1 = radians(lon1)
-    lon2 = radians(lon2)
-    lat1 = radians(lat1)
-    lat2 = radians(lat2)
-        
-    # Haversine formula
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    
-    c = 2 * asin(sqrt(a))
-        
-    # Radius of earth in kilometers. Use 3956 for miles
-    r = 6371
-    
-    # calculate the result
-    return meters_to_feet((c * r) * 1000)
+def cal_distance_geo(lat1, lat2, lon1, lon2):
+    coords_1 = (lat1, lon1)
+    coords_2 = (lat2, lon2)
+    return geopy.distance.geodesic(coords_1, coords_2).miles

@@ -4,6 +4,7 @@ import datetime as dt
 import requests
 import itertools
 import dataset.helpers as helpers
+import dataset.exit as exit
 
 class Dataset:
     def __init__(self, name, df):
@@ -50,6 +51,10 @@ class Dataset:
             'vert_s': self.get_vertical_speed(),
             'horz_s': self.get_horizontal_speed(),
             'dive_angle': self.get_dive_angle(self.get_vertical_speed(), self.get_horizontal_speed())})
+
+
+    def get_exit(self):
+        return exit.get_exit(self.df)
     
     def copy(self):
         self.df.to_csv(f'.\\data\\test-v1-{self.name}')
