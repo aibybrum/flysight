@@ -28,7 +28,7 @@ def get_skydive_vert_speed(dataframe):
 
 def get_exit(dataframe):
     jmp_df = get_skydive_elevation(dataframe)['plane_on_altitude']
-    mean = np.mean([jmp_df.time[get_skydive_vert_speed(dataframe)['exit']], jmp_df.time[get_skydive_horz_speed(self.df)['exit']]])
+    mean = np.mean([jmp_df.time[get_skydive_vert_speed(dataframe)['exit']], jmp_df.time[get_skydive_horz_speed(dataframe)['exit']]])
     return dataframe.index[dataframe['time'] == helpers.closest_value(dataframe.time, mean)][0]
 
 def plt_exit_point(dataframe):
