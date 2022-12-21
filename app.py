@@ -6,7 +6,7 @@ import logging
 import datetime
 import pandas as pd
 import plotly.express as px
-import dataset.dataset as dataset
+import jump.dataset as dataset
 
 from dash import dcc, html, dash_table, callback
 from dash.dependencies import Input, Output, State
