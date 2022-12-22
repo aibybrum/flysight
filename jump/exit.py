@@ -3,15 +3,19 @@ import peakutils as pu
 import matplotlib.pylab as pl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import exit.helpers as helpers
+import helpers as helpers
  
-class Exit:
+class Exit():
+    exit_df = 0
+
     def __init__(self, df):
         self.df = df
 
-    def set_df(self, df):
-        self.df = df
+    def get_exit_df(self):
+        exit_df = self.df.iloc[self.get_exit():]
+        return exit_df
 
+    # Get exit point
     def get_skydive_elevation(self):
         peaks = pu.indexes(self.df.elevation, thres=0.9, min_dist=1)
         # offset because the exit point can be to late to measure horz, vert speed
@@ -40,6 +44,7 @@ class Exit:
         mean = np.mean([jmp_df.time[self.get_skydive_vert_speed()['exit']], jmp_df.time[self.get_skydive_horz_speed()['exit']]])
         return self.df.index[self.df['time'] == helpers.closest_value(self.df.time, mean)][0]
 
+    # Visualistions
     def plt_exit_point(self):
         jmp_df = self.get_skydive_elevation()['plane_on_altitude']
         
@@ -80,7 +85,7 @@ class Exit:
 
         pl.show()
 
-    def plt(self):
+    def plt_exit(self):
         fig, ax = plt.subplots(figsize=(15,8))
         fig.subplots_adjust(right=0.75)
 
