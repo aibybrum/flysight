@@ -4,16 +4,15 @@ import matplotlib.pylab as pl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import helpers as helpers
- 
-class Exit():
-    exit_df = 0
 
+class Exit():
     def __init__(self, df):
         self.df = df
-
+        self.exit_df = self.df.iloc[self.get_exit():].reset_index()
+        # self.exit_df = helpers.set_start_point(self.df, self.get_exit()).iloc[self.get_exit():].reset_index()
+        
     def get_exit_df(self):
-        exit_df = self.df.iloc[self.get_exit():]
-        return exit_df
+        return self.exit_df
 
     # Get exit point
     def get_skydive_elevation(self):
@@ -94,9 +93,9 @@ class Exit():
 
         twin2.spines.right.set_position(("axes", 1.08))
 
-        p1, = ax.plot(self.df.horz_distance.iloc[self.get_exit():], self.df.elevation.iloc[self.get_exit():], "b", label="Elevation")
-        p2, = twin1.plot(self.df.horz_distance.iloc[self.get_exit():], self.df.horz_speed_mph.iloc[self.get_exit():], "r", label="Horz speed")
-        p3, = twin2.plot(self.df.horz_distance.iloc[self.get_exit():], self.df.vert_speed_mph.iloc[self.get_exit():], "g", label="Vert speed")
+        p1, = ax.plot(self.exit_df.horz_distance, self.exit_df.elevation, "b", label="Elevation")
+        p2, = twin1.plot(self.exit_df.horz_distance, self.exit_df.horz_speed_mph, "r", label="Horz speed")
+        p3, = twin2.plot(self.exit_df.horz_distance, self.exit_df.vert_speed_mph, "g", label="Vert speed")
 
         ax.set_xlabel("Distance (feet)")
         ax.set_ylabel("Elevation (feet)")
