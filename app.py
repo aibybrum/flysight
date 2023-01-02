@@ -28,7 +28,6 @@ app.layout = html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
         ]),
-        #className='upload-data',
         style={
             'width': '100%',
             'height': '60px',

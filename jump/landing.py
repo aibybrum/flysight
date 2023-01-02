@@ -4,14 +4,20 @@ import matplotlib.pylab as pl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import plotly.express as px
+import os
 import exit as exit
+from dotenv import load_dotenv
 import helpers
+
+load_dotenv()
+
+token = os.getenv("TOKEN")
 
 class Landing():
     def __init__(self, df):
         self.df = df
         self.exit_df = exit.Exit(df).get_exit_df()
-        self.landing_df = self.exit_df.iloc[self.get_landing():].reset_index()
+        self.landing_df = self.exit_df.iloc[self.get_landing():].reset_index(drop=True)
         
     def get_landing(self):
         elevation_lows = pu.indexes(-self.exit_df.elevation, thres=0.5, min_dist=1)
@@ -71,41 +77,6 @@ class Landing():
 
         pl.show()
 
-    def plt_landing(self):
-        fig, ax = plt.subplots(figsize=(15,8))
-        fig.subplots_adjust(right=0.75)
 
-        twin1 = ax.twinx()
-        twin2 = ax.twinx()
-
-        twin2.spines.right.set_position(("axes", 1.08))
-
-        p1, = ax.plot(self.landing_df.horz_distance, self.landing_df.elevation, "b", label="Elevation")
-        p2, = twin1.plot(self.landing_df.horz_distance, self.landing_df.horz_speed_mph, "r", label="Horz speed")
-        p3, = twin2.plot(self.landing_df.horz_distance, self.landing_df.vert_speed_mph, "g", label="Vert speed")
-
-        ax.set_xlabel("Distance (feet)")
-        ax.set_ylabel("Elevation (feet)")
-        twin1.set_ylabel("Horizontal speed (mph)")
-        twin2.set_ylabel("Vertical speed (mph)")
-
-        ax.yaxis.label.set_color(p1.get_color())
-        twin1.yaxis.label.set_color(p2.get_color())
-        twin2.yaxis.label.set_color(p3.get_color())
-
-        tkw = dict(size=4, width=1.5)
-        ax.tick_params(axis='y', colors=p1.get_color(), **tkw)
-        twin1.tick_params(axis='y', colors=p2.get_color(), **tkw)
-        twin2.tick_params(axis='y', colors=p3.get_color(), **tkw)
-        ax.tick_params(axis='x', **tkw)
-
-        ax.legend(handles=[p1, p2, p3])
-        plt.show()
-
-    def side_view(self):
-        fig = px.line(self.landing_df, x="horz_distance", y="elevation", height=700, width=550)
-        fig.update_layout(title='Side view of flight path', title_x=0.5,
-                          xaxis_title='Horizontal distance (feet)',
-                          yaxis_title='Height (feet)')
-        fig.show()
-
+    def save_landing(self, name):
+        self.landing_df.to_csv(f'././data/landing/{name}.csv', index=False) 

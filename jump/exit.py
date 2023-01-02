@@ -8,7 +8,7 @@ import helpers as helpers
 class Exit():
     def __init__(self, df):
         self.df = df
-        self.exit_df = self.df.iloc[self.get_exit():].reset_index()
+        self.exit_df = self.df.iloc[self.get_exit():].reset_index(drop=True)
         # self.exit_df = helpers.set_start_point(self.df, self.get_exit()).iloc[self.get_exit():].reset_index()
         
     def get_exit_df(self):
@@ -93,9 +93,9 @@ class Exit():
 
         twin2.spines.right.set_position(("axes", 1.08))
 
-        p1, = ax.plot(self.exit_df.horz_distance, self.exit_df.elevation, "b", label="Elevation")
-        p2, = twin1.plot(self.exit_df.horz_distance, self.exit_df.horz_speed_mph, "r", label="Horz speed")
-        p3, = twin2.plot(self.exit_df.horz_distance, self.exit_df.vert_speed_mph, "g", label="Vert speed")
+        p1, = ax.plot(self.exit_df.horz_distance_m, self.exit_df.elevation, "b", label="Elevation")
+        p2, = twin1.plot(self.exit_df.horz_distance_m, self.exit_df.horz_speed_mph, "r", label="Horz speed")
+        p3, = twin2.plot(self.exit_df.horz_distance_m, self.exit_df.vert_speed_mph, "g", label="Vert speed")
 
         ax.set_xlabel("Distance (feet)")
         ax.set_ylabel("Elevation (feet)")
@@ -114,3 +114,6 @@ class Exit():
 
         ax.legend(handles=[p1, p2, p3])
         plt.show()
+
+    def save_exit(self, name):
+        self.exit_df.to_csv(f'././data/exit/{name}.csv', index=False) 

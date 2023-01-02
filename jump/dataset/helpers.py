@@ -26,7 +26,10 @@ def calc_dive_angle(v_speed, h_speed):
     except ZeroDivisionError:
         return 0   
 
-def cal_distance_geo(lat1, lat2, lon1, lon2):
+def cal_distance_geo(metric, lat1, lat2, lon1, lon2):
     coords_1 = (lat1, lon1)
     coords_2 = (lat2, lon2)
-    return geopy.distance.geodesic(coords_1, coords_2).miles
+    if metric == 'ft':
+        return geopy.distance.geodesic(coords_1, coords_2).miles * 5280
+    elif metric == 'm':
+        return geopy.distance.geodesic(coords_1, coords_2).kilometers * 1000

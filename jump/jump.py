@@ -22,11 +22,11 @@ class Jump(landing.Landing, exit.Exit):
         return f'{self.name}'
 
 def main():
-    data = pd.read_csv('././data/J1.csv', skiprows=[1])
-    jump = Jump("v1", data)
+    name = "J1"
+    data = pd.read_csv(f'././data/{name}.csv', skiprows=[1])
+    jump = Jump(name, data)
 
-    jump.plt_landing()
-    #jump.side_view()
+    jump.plt_exit()
 
 if __name__ == "__main__":
     main()

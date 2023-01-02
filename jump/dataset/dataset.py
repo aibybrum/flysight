@@ -38,10 +38,10 @@ class Dataset:
     def get_dive_angle(self, v_speed, h_speed):
         return [helpers.calc_dive_angle(v_speed[i], h_speed[i]) for i in range(0, len(self.df))]
 
-    def get_horizontal_distance(self):
+    def get_horizontal_distance(self, metric):
         l, f = [0], 0.0
         for i in range(0, len(self.df)-1):
-            f += helpers.cal_distance_geo(self.df.lat[i], self.df.lat[i+1], self.df.lon[i], self.df.lon[i+1]) * 5280
+            f += helpers.cal_distance_geo(metric, self.df.lat[i], self.df.lat[i+1], self.df.lon[i], self.df.lon[i+1])
             l.append(f)
         return l
 
@@ -51,9 +51,11 @@ class Dataset:
             'lat': self.df.lat,
             'lon': self.df.lon,
             'elevation': self.get_fixed_elevation(0),
-            'horz_distance': self.get_horizontal_distance(),
+            'horz_distance_ft': self.get_horizontal_distance('ft'),
+            'horz_distance_m': self.get_horizontal_distance('m'),
             'vert_speed_mph': self.get_vertical_speed('mph'),
             'horz_speed_mph': self.get_horizontal_speed('mph'),
-            'vert_speed_km': self.get_vertical_speed('km/u'),
-            'horz_speed_km': self.get_horizontal_speed('km/u'),
+            'vert_speed_km/u': self.get_vertical_speed('km/u'),
+            'horz_speed_km/u': self.get_horizontal_speed('km/u'),
+            'heading': self.df.heading,
             'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph'))})    
