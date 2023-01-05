@@ -6,7 +6,6 @@ import logging
 import datetime
 import pandas as pd
 import plotly.express as px
-import jump.dataset as dataset
 
 from dash import dcc, html, dash_table, callback
 from dash.dependencies import Input, Output, State
@@ -49,7 +48,10 @@ def parse_contents(contents, filename, date):
     try:
         if 'csv' or 'CSV' in filename:
             csv_file = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
-            df = dataset.Dataset(filename, csv_file)
+
+            jp = jump.Jump("test", csv_file)
+            df = jp.get_df()
+
     except Exception as e:
         logging.error(f"{e}")
         return html.Div([

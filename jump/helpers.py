@@ -1,6 +1,5 @@
 import numpy as np
 
-# common
 def set_start_point(df, key):
     df2 = df.copy()
     df2.time = shift_df(df2, key, 'time')

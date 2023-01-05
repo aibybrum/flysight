@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import plotly.express as px
 import os
-import exit as exit
+from exit import Exit
 from dotenv import load_dotenv
 import helpers
 
@@ -16,7 +16,7 @@ token = os.getenv("TOKEN")
 class Landing():
     def __init__(self, df):
         self.df = df
-        self.exit_df = exit.Exit(df).get_exit_df()
+        self.exit_df = Exit(df).get_exit_df()
         self.landing_df = self.exit_df.iloc[self.get_landing():].reset_index(drop=True)
         
     def get_landing(self):
