@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-import dataset.helpers as helpers
+import helpers
+
 
 class Dataset:
     def __init__(self, df):
@@ -41,7 +42,7 @@ class Dataset:
     def get_horizontal_distance(self, metric):
         l, f = [0], 0.0
         for i in range(0, len(self.df)-1):
-            f += helpers.cal_distance_geo(metric, self.df.lat[i], self.df.lat[i+1], self.df.lon[i], self.df.lon[i+1])
+            f += helpers.cal_distance_geo(metric, self.df.lat[i], self.df.lat[i + 1], self.df.lon[i], self.df.lon[i + 1])
             l.append(f)
         return l
 

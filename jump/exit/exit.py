@@ -3,9 +3,10 @@ import peakutils as pu
 import matplotlib.pylab as pl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import helpers 
+import jump.helpers as helpers
 
-class Exit():
+
+class Exit:
     def __init__(self, df):
         self.df = df
         self.exit_df = self.df.iloc[self.get_exit():].reset_index(drop=True)
@@ -43,7 +44,6 @@ class Exit():
         mean = np.mean([jmp_df.time[self.get_skydive_vert_speed()['exit']], jmp_df.time[self.get_skydive_horz_speed()['exit']]])
         return self.df.index[self.df['time'] == helpers.closest_value(self.df.time, mean)][0]
 
-    # Visualistions
     def plt_exit_point(self):
         jmp_df = self.get_skydive_elevation()['plane_on_altitude']
         
@@ -57,7 +57,7 @@ class Exit():
         pl.axvline(x = jmp_df.time[horz_speed['exit']], color='grey', linestyle ="--")
         pl.plot(jmp_df.time[horz_speed['peaks']], jmp_df.horz_speed_mph[horz_speed['peaks']], marker="8", color='g', ls="")
         pl.plot(jmp_df.time[horz_speed['lows'][0]], jmp_df.horz_speed_mph[horz_speed['lows'][0]], marker="8", color='r', ls="")
-        pl.title("Exit - Horizontal speed")
+        pl.title("exit - Horizontal speed")
         pl.xlabel("Time (s)")
         pl.ylabel("Horizontal speed (mph)")
 
@@ -68,7 +68,7 @@ class Exit():
         pl.axvline(x = jmp_df.time[vert_speed['exit']], color='grey', linestyle ="--")
         pl.plot(jmp_df.time[vert_speed['peaks'][0]], jmp_df.vert_speed_mph[vert_speed['peaks'][0]], marker="8", color='g', ls="")
         pl.plot(jmp_df.time[vert_speed['lows']], jmp_df.vert_speed_mph[vert_speed['lows']], marker="8", color='r', ls="")
-        pl.title("Exit - Vertical speed")
+        pl.title("exit - Vertical speed")
         pl.xlabel("Time (s)")
         pl.ylabel("Vertical speed (mph)")
 
@@ -116,4 +116,4 @@ class Exit():
         plt.show()
 
     def save_exit(self, name):
-        self.exit_df.to_csv(f'././data/exit/{name}.csv', index=False) 
+        self.exit_df.to_csv(f'././data/exit/{name}.csv', index=False)

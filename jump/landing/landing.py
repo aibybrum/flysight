@@ -1,19 +1,15 @@
-import numpy as np
 import peakutils as pu
 import matplotlib.pylab as pl
-import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import plotly.express as px
 import os
-from exit import Exit
 from dotenv import load_dotenv
-import helpers
+from exit.exit import Exit
 
 load_dotenv()
-
 token = os.getenv("TOKEN")
 
-class Landing():
+
+class Landing:
     def __init__(self, df):
         self.df = df
         self.exit_df = Exit(df).get_exit_df()
@@ -26,12 +22,12 @@ class Landing():
                 if self.exit_df.elevation[elevation_lows[i]] > 250][-1]
 
     def plt_landing_point(self):
-        # Test for gettting the landing
+        # Test for getting the landing
         gs = gridspec.GridSpec(2, 2)
         pl.figure(figsize=(15,10))
 
         # Elevation
-        ax = pl.subplot(gs[0, :]) # row 1, span all columns
+        ax = pl.subplot(gs[0, :])
         elevation_peaks = pu.indexes(self.exit_df.elevation, thres=0.01, min_dist=1)
         elevation_lows = pu.indexes(-self.exit_df.elevation, thres=0.5, min_dist=1)
 
@@ -77,6 +73,5 @@ class Landing():
 
         pl.show()
 
-
     def save_landing(self, name):
-        self.landing_df.to_csv(f'././data/landing/{name}.csv', index=False) 
+        self.landing_df.to_csv(f'././data/landing/{name}.csv', index=False)
