@@ -1,8 +1,9 @@
-# import pandas as pd
+import pandas as pd
 
-from dataset.dataset import Dataset
-from landing import Landing
-from exit import Exit
+from flysight.dataset.dataset import Dataset
+from flysight.jump.landing.landing import Landing
+from flysight.jump.exit.exit import Exit
+
 
 class Jump(Landing, Exit):
     def __init__(self, name, df):
@@ -19,15 +20,17 @@ class Jump(Landing, Exit):
     def set_name(self, name):
         self.name = name
 
-    def __str__ (self):
+    def __str__(self):
         return f'{self.name}'
+
 
 # def main():
 #     name = "J1"
-#     data = pd.read_csv(f'././data/{name}.csv', skiprows=[1])
+#     data = pd.read_csv(f'./../../data/{name}.csv', skiprows=[1])
 #     jump = Jump(name, data)
 
 #     jump.plt_exit()
+
 
 # if __name__ == "__main__":
 #     main()

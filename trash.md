@@ -28,3 +28,8 @@ def get_dynamic_elevation():
     for i in range(0, len(dataset.hMSL)):
         l.append(meters_to_feet(dataset.hMSL[i]) - ground_elevation - earth_elevation[i])
     return l
+
+
+
+
+

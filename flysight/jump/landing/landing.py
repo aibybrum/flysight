@@ -3,7 +3,7 @@ import matplotlib.pylab as pl
 import matplotlib.gridspec as gridspec
 import os
 from dotenv import load_dotenv
-from exit.exit import Exit
+from flysight.jump.exit.exit import Exit
 
 load_dotenv()
 token = os.getenv("TOKEN")

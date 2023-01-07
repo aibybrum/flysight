@@ -3,7 +3,7 @@ import peakutils as pu
 import matplotlib.pylab as pl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
-import jump.helpers as helpers
+import flysight.jump.exit.helpers as helpers
 
 
 class Exit:

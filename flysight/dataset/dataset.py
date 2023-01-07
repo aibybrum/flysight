@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import helpers
+import flysight.dataset.helpers as helpers
 
 
 class Dataset:
@@ -59,4 +59,4 @@ class Dataset:
             'vert_speed_km/u': self.get_vertical_speed('km/u'),
             'horz_speed_km/u': self.get_horizontal_speed('km/u'),
             'heading': self.df.heading,
-            'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph'))})    
+            'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph'))})
