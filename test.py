@@ -13,23 +13,37 @@ from dash.dependencies import Input, Output, State
 app = dash.Dash(__name__)
 app.title = 'Sw00pGenerator3000'
 
-app.layout = html.Div([
-     html.Div(
-        className="app-header",
-        children=[
-            html.Div('Plotly Dash', className="app-header--title")
-        ]
-    ),
-    html.Div(
-        children=html.Div([
-            html.H5('Overview'),
-            html.Div('''
-                This is an example of a simple Dash app with
-                local, customized CSS.
-            ''')
-        ])
-    )
-
+app.layout = html.Div(className="center", children=[
+    html.Div(className="left", children=[
+        html.Div(className="logo", children=[
+            html.Div("SW00P", className="swoop"),
+            html.Div("GENERATOR 3000", className="generator3000"),
+        ]),  
+        html.Div(className="upload", children=[
+            dcc.Upload(
+                className='upload-data',
+                children=html.Div([
+                    'Drop your file here, or ',
+                    html.A('browse')
+                ]),
+            ),
+        ]),  
+        html.Div(className="yaxis", children=[
+            html.H2("Y-axis"),
+            dcc.Dropdown(
+                ['Elevation', 'Horizontal speed', 'Vertical speed', 'Dive angle'],
+                ['Elevation', 'Horizontal speed', 'Vertical speed'],
+                multi=True,
+                id='y_drop',
+            ),
+        ]),
+    ]),
+    html.Div(className="right", children=[
+        html.Div(className="title", children=[
+            html.H1("Dashboard"),
+            html.Div(className="line")
+        ]),
+    ]),
 ])
 
 

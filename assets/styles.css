@@ -9,7 +9,6 @@ General
 
 html{
 	font-size: 0.625rem;
-	background-color: aquamarine;
 }
 
 *{
@@ -24,7 +23,8 @@ html{
 
 body{
 	font-family: 'Roboto', sans-serif;
-	color: #222;
+	color: #4F4F4F;
+	padding-left: 30rem;
 }
 
 body > * {
