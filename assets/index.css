@@ -4,6 +4,35 @@
 */
 
 /* ==================
+headers
+=====================*/
+
+h1 {
+    font-size: 2.6rem;
+    font-weight: bold;
+}
+
+
+h2{
+	font-size: 1.4rem;
+    font-weight: medium;
+}
+
+/* ==================
+Scroll bar
+=====================*/
+
+::-webkit-scrollbar {
+    width: 0.2rem;
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #CEDAE6;
+    border-radius: 1rem;
+}
+
+/* ==================
 Left side
 =====================*/
 
@@ -14,8 +43,13 @@ Left side
     top: 0; 
     bottom: 0;
     width: 30rem;
-    z-index:5;
+    z-index:2;
+    overflow-y: scroll;
 }
+
+/* ==================
+Logo
+=====================*/
 
 .logo {
     text-align: center;
@@ -37,27 +71,118 @@ Left side
     margin-top: -1.5rem;
 }
 
-.upload {
-    display: flex;
-    justify-content: center;
-    font-family: 'Roboto', sans-serif;
-    margin-top: 5rem;
-}
+/* ==================
+Upload
+=====================*/
 
-.upload-data {
+.upload {    
+    font-family: 'Roboto', sans-serif;
     width: 22.2rem;
     height: 6.8rem;
-    line-height: 6rem;
     border-width: 0.1rem;
     border-style: dashed;
     border-radius: 0.5rem;
     border-color: #CEDAE6;
+    margin: 5rem auto 0 auto;
+}
+
+.upload-data {    
     font-size: 1.2rem;
     text-align: center;
+    margin-top: 1.9rem;
 }
 
 .upload-data a{
     color: #057DE5;
+}
+
+.upload .support {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #CEDAE6;
+}
+
+/* ==================
+Y axis
+=====================*/
+
+.yaxis {
+    width: 22.2rem;
+    margin: 3rem auto 0 auto;
+}
+
+.yaxis #y_drop{
+    margin-top: 1.5rem;
+}
+
+/* ==================
+Units
+=====================*/
+
+.units {
+    width: 22.2rem;
+    margin: 3rem auto 0 auto;
+}
+
+.units #speed_metric{
+    margin-top: 1.5rem;
+}
+
+.units #distance_metric{
+    margin-top: 1.5rem;
+}
+
+/* ==================
+Swoops
+=====================*/
+
+.swoops {
+    width: 22.2rem;
+    margin: 3rem auto 0 auto;
+}
+
+.swoops .check {
+    width: 100%;
+    height: 10.3rem;
+    margin-top: 1.5rem;
+    background-color: #F7F6FC;
+    border-radius: 0.5rem;
+    overflow-y: scroll;
+}
+
+.swoops .check .item {
+    display: flex;
+    flex-direction: column;
+}
+
+.swoops .check .itemke {
+    margin-left: 1.4rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.swoops .check .itemke text {
+    margin-left: 1.3rem;
+}
+
+
+/* ==================
+Save
+=====================*/
+
+.save {
+    width: 22.2rem;
+    margin: 3rem auto 5rem auto;
+}
+
+.save #save-val{
+    width: 100%;
+    border: none;
+    background-color: #057DE5;
+    color: #fff;
+    padding: 15px 32px;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
 }
 
 /* ==================
@@ -70,6 +195,16 @@ Right side
 	height: 100vh;
 }
 
-/* ==================
-Footer
-=====================*/
+.title {
+    position: absolute;
+    margin-top: 5rem;
+    margin-left: 3.5rem;
+}
+
+.title .line{
+    width: 2.5rem;
+    height: 0.2rem;
+    color: #057DE5;
+    margin-top: 1rem;
+    background-color: #057DE5;
+}
