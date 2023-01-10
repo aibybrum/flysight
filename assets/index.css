@@ -37,6 +37,17 @@ Left side
 =====================*/
 
 .left {
+    height: 100%;
+    width: 30rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-y: scroll;
+}
+
+/*
+.left {
     background-color: #fff;
     position: fixed;
     left: 0; 
@@ -46,6 +57,7 @@ Left side
     z-index:2;
     overflow-y: scroll;
 }
+*/
 
 /* ==================
 Logo
@@ -121,7 +133,7 @@ Y axis
 
 .label_y_check {
     display: inline-block;
-    padding: 4px 11px;
+    padding: 0.4rem 1.1rem;
     font-size: 1.2rem;
     cursor: pointer;
     margin-right: 1rem;
@@ -163,7 +175,7 @@ Units
 .label_units_radio {
     width: 50%;
     display: inline-block;
-    padding: 4px 11px;
+    padding: 0.4rem 1.1rem;
     font-size: 1.2rem;
     cursor: pointer;
     margin-top: 1rem;
@@ -197,30 +209,38 @@ Swoops
     margin: 3rem auto 0 auto;
 }
 
-.swoops .check {
+.swoops .window {
     width: 100%;
-    height: 10.3rem;
+    height: 11.55rem;
     margin-top: 1.5rem;
     background-color: #F7F6FC;
     border-radius: 0.5rem;
     overflow-y: scroll;
 }
 
-.swoops .check .item {
+.input_swoop{
+    display: none;
+}
+
+.label_swoop {
     display: flex;
     flex-direction: column;
+    padding: 1.1rem 0;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-align: center;
+    background-color: #F7F6FC;
+    color: #4F4F4F;
 }
 
-.swoops .check .input_item {
-    margin-left: 1.4rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+.label_swoop:hover {
+    background-color: #EEEDF2;
 }
-/*
-.swoops .check .input_item text {
-    /*margin-left: 1.3rem;
-}*/
 
+.label_swoop:has(>.input_swoop:checked) {
+    background-color: #057DE5;
+    color: #fff;
+}
 
 /* ==================
 Save
@@ -236,7 +256,7 @@ Save
     border: none;
     background-color: #057DE5;
     color: #fff;
-    padding: 15px 32px;
+    padding: 1.5rem 3.2rem;
     border-radius: 0.5rem;
     font-size: 1.2rem;
 }
@@ -247,14 +267,14 @@ Right side
 
 .right {
     background-color: #F7F6FC;
-    position: relative;
+    margin-left: 30rem;
 	height: 100vh;
+    overflow: scroll;
 }
 
 .title {
-    position: absolute;
     margin-top: 5rem;
-    margin-left: 3.5rem;
+    margin-left: 3rem;
 }
 
 .title .line{
@@ -263,4 +283,28 @@ Right side
     color: #057DE5;
     margin-top: 1rem;
     background-color: #057DE5;
+}
+
+.metrics {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+    margin: 3rem;
+    width: auto;
+}
+
+.elevation {
+    color: #636EFA;
+}
+
+.horz_speed {
+    color: #FF0B0B;
+}
+
+.vert_speed {
+    color: #00CC96;
+}
+
+.dive_angle {
+    color: #AB63FA;
 }
