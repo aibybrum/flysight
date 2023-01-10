@@ -111,8 +111,36 @@ Y axis
     margin: 3rem auto 0 auto;
 }
 
-.yaxis #y_drop{
-    margin-top: 1.5rem;
+.yaxis .y_check {
+    margin-top: 0.5rem;
+}
+
+.input_y_check{
+    display: none;
+}
+
+.label_y_check {
+    display: inline-block;
+    padding: 4px 11px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    background-color: #fff;
+    color: #057DE5;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    border-color: #CEDAE6;
+}
+
+.label_y_check:has(>.input_y_check:checked) {
+    background-color: #057DE5;
+    color: #fff;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    border-color: #CEDAE6;
 }
 
 /* ==================
@@ -124,12 +152,40 @@ Units
     margin: 3rem auto 0 auto;
 }
 
-.units #speed_metric{
-    margin-top: 1.5rem;
+.units .units_radio {
+    margin-top: 0.5rem;
 }
 
-.units #distance_metric{
-    margin-top: 1.5rem;
+.input_units_radio{
+    display: none;
+}
+
+.label_units_radio {
+    width: 50%;
+    display: inline-block;
+    padding: 4px 11px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    text-align: center;
+    background-color: #fff;
+    color: #057DE5;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0 0.5rem 0.5rem 0;
+    border-color: #CEDAE6;
+    margin-left: -0.1rem;
+}
+
+.label_units_radio:first-of-type {
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.label_units_radio:has(>.input_units_radio:checked) {
+    background-color: #057DE5;
+    color: #fff;
+    border-width: 0.1rem;
+    border-color: #057DE5;
 }
 
 /* ==================
@@ -155,15 +211,15 @@ Swoops
     flex-direction: column;
 }
 
-.swoops .check .itemke {
+.swoops .check .input_item {
     margin-left: 1.4rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
-
-.swoops .check .itemke text {
-    margin-left: 1.3rem;
-}
+/*
+.swoops .check .input_item text {
+    /*margin-left: 1.3rem;
+}*/
 
 
 /* ==================

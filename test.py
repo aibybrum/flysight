@@ -29,23 +29,23 @@ app.layout = html.Div(className="center", children=[
         ),
         html.Div(className="yaxis", children=[
             html.H2("Y-axis"),
-            dcc.Dropdown(
+            dcc.Checklist(
                 ['Elevation', 'Horizontal speed', 'Vertical speed', 'Dive angle'],
                 ['Elevation', 'Horizontal speed', 'Vertical speed'],
-                multi=True, id='y_drop',
-            ),
+                className="y_check", inputClassName="input_y_check", labelClassName="label_y_check"
+            )
         ]),
         html.Div(className="units", children=[
             html.H2("Units"),
-            dcc.Dropdown(['km/u', 'mph'], 'km/u', id='speed_metric'),
-            dcc.Dropdown(['m', 'ft'], 'm', id='distance_metric'),
+            dcc.RadioItems(['km/u', 'mph'], 'km/u', className="units_radio", inputClassName="input_units_radio", labelClassName="label_units_radio"),
+            dcc.RadioItems(['m', 'ft'], 'm', inputClassName="input_units_radio", labelClassName="label_units_radio"),
         ]),
         html.Div(className="swoops", children=[
             html.H2("Swoops"),
             html.Div(className="check", children=[
                 dcc.RadioItems(
                     ['09-01-2023', '10-01-2023', '11-01-2023', '12-01-2023'], '09-01-2023',
-                    inline=False, className="item", inputClassName="itemke"
+                    inline=False, className="item", inputClassName="input_item"
                 ),
             ]),
         ]),
