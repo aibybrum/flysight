@@ -28,10 +28,10 @@ app.layout = html.Div(className="center", children=[
             ]),
         ),
         html.Div(className="swoops", children=[
-            #html.H2("Swoops"),
+            html.H2("Sw00ps"),
             html.Div(className="window", children=[
                 dcc.RadioItems(
-                    ['09-01-2023', '10-01-2023', '11-01-2023', '12-01-2023'], '09-01-2023',
+                    ['09-01-2023', '10-01-2023', '11-01-2023', '12-01-2023', '13-01-2023', '14-01-2023'], '09-01-2023',
                     inline=False, className="swoop", inputClassName="input_swoop", labelClassName="label_swoop"
                 ),
             ]),
@@ -55,32 +55,67 @@ app.layout = html.Div(className="center", children=[
     ]),
     html.Div(className="right", children=[
         html.Div(className="title", children=[
-            html.H1("F@#k Ye4h!"),
+            html.H1("F@ck Yea#!"),
             html.Div(className="line")
         ]),
         html.Div(className="metrics", children=[
             html.Div(className="metric elevation", children=[
-                html.H3('493,58 feet', id='elevation'),
-                html.Label('Elevation'),
+                html.Div('---,-- feet', className="first_title", id='elevation'),
+                html.Div('Elevation', className="second_title"),
             ]),
             html.Div(className="metric horz_speed", children=[
-                html.H3('87,47 km/u', id='horz_speed'),
-                html.Label('Horizontal speed'),
+                html.Div('---,-- km/u', className="first_title", id='horz_speed'),
+                html.Div('Horizontal speed', className="second_title"),
             ]),
             html.Div(className="metric vert_speed", children=[
-                html.H3('112,66 km/u', id='vert_speed'),
-                html.Label('Vertical speed'),
+                html.Div('---,-- km/u', className="first_title", id='vert_speed'),
+                html.Div('Vertical speed', className="second_title"),
             ]),
             html.Div(className="metric dive_angle", children=[
-                html.H3('40,10 °', id='dive_angle'),
-                html.Label('Dive angle'),
+                html.Div('---,-- °', className="first_title", id='dive_angle'),
+                html.Div('Dive angle', className="second_title"),
             ]),
         ]),
         html.Div(className="graphs", children=[
-
+            html.Div(className="graph overview", children=[
+                html.H2("Overview"),
+                dcc.Graph(id='overview'),
+            ]),
+            html.Div(className="graph side_view_of_flight_path", children=[
+                html.H2("Side view of flight path"),
+                dcc.Graph(id='side_view_of_flight_path'),
+            ]),
+            html.Div(className="graph speed_during_swoop", children=[
+                html.H2("Speed during swoop"),
+                dcc.Graph(id='speed_during_swoop'),
+            ]),
+            html.Div(className="graph map", children=[
+                html.H2("Map"),
+                dcc.Graph(id='map'),
+            ]),
+        ]),
+        html.Div(className="footer", children=[
+            html.Div("© SWOOPGENERATOR3000 inc. 2023 - bram langmans", className="footer_text"),
         ]),
     ]),
 ])
+
+
+@app.callback(Input('upload-data', 'contents'),
+              State('upload-data', 'filename'))
+def upload_file(contents, filename):
+    content_type, content_string = contents.split(',')
+    decoded = base64.b64decode(content_string)
+    try:
+        if 'csv' or 'CSV' in filename:
+            # Assume that the user uploaded a CSV file
+            df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
+            print(df)
+    except Exception as e:
+        print(e)
+        return html.Div([
+            'There was an error processing this file.'
+        ])
 
 
 if __name__ == '__main__':

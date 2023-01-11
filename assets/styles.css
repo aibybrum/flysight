@@ -1,5 +1,5 @@
 /**
-* stylesheet 
+* Dashboard
 * @author Bram Langmans
 */
 
@@ -30,3 +30,372 @@ body > * {
 	font-size: 1.3rem;
 }
 
+/* ==================
+headers
+=====================*/
+
+h1 {
+    font-size: 2.6rem;
+    font-weight: bold;
+}
+
+
+h2{
+	font-size: 1.4rem;
+    font-weight: medium;
+}
+
+/* ==================
+Scroll bar
+=====================*/
+
+::-webkit-scrollbar {
+    width: 0.2rem;
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #CEDAE6;
+    border-radius: 1rem;
+}
+
+/* ==================
+Left side
+=====================*/
+
+.left {
+    height: 100%;
+    width: 30rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-y: scroll;
+}
+
+/* ==================
+Logo
+=====================*/
+
+.logo {
+    margin: 5rem auto 0 auto;
+    width: 22.2rem;
+}
+
+.logo > * {
+    text-align: center;
+}
+
+.swoop {
+    font-size: 4.8rem;
+    font-weight: bold;
+    height: 4.8rem;
+	color: #4F4F4F;
+}
+
+.generator3000 {
+    font-size: 1rem;
+    font-weight: light;
+    letter-spacing: 0.53rem;
+	color: #057DE5;
+}
+
+/* ==================
+Upload
+=====================*/
+
+.upload {    
+    width: 22.2rem;
+    height: 6.8rem;
+    border-width: 0.1rem;
+    border-style: dashed;
+    border-radius: 0.5rem;
+    border-color: #CEDAE6;
+    margin: 5rem auto 0 auto;
+}
+
+.upload-data {    
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.upload-data a{
+    color: #057DE5;
+}
+
+.upload .support {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #CEDAE6;
+    margin-top: 0.3rem;
+}
+
+/* ==================
+Y axis
+=====================*/
+
+.yaxis {
+    width: 22.2rem;
+    margin: 3rem auto 0 auto;
+}
+
+.yaxis .y_check {
+    margin-top: 0.5rem;
+}
+
+.input_y_check{
+    display: none;
+}
+
+.label_y_check {
+    display: inline-block;
+    padding: 0.5rem 1.1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    background-color: #fff;
+    color: #057DE5;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    border-color: #CEDAE6;
+}
+
+.label_y_check:has(>.input_y_check:checked) {
+    background-color: #057DE5;
+    color: #fff;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    border-color: #CEDAE6;
+}
+
+/* ==================
+Units
+=====================*/
+
+.units {
+    width: 22.2rem;
+    margin: 3rem auto 0 auto;
+}
+
+.units .units_radio {
+    margin-top: 0.5rem;
+}
+
+.input_units_radio{
+    display: none;
+}
+
+.label_units_radio {
+    width: 50%;
+    display: inline-block;
+    padding: 0.5rem 1.1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    text-align: center;
+    background-color: #fff;
+    color: #057DE5;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0 0.5rem 0.5rem 0;
+    border-color: #CEDAE6;
+    margin-left: -0.1rem;
+}
+
+.label_units_radio:first-of-type {
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.label_units_radio:has(>.input_units_radio:checked) {
+    background-color: #057DE5;
+    color: #fff;
+    border-width: 0.1rem;
+    border-color: #057DE5;
+}
+
+/* ==================
+Swoops
+=====================*/
+
+.swoops {
+    width: 22.2rem;
+    margin: 3rem auto 0 auto;
+}
+
+.swoops .window {
+    width: 100%;
+    height: 10.15rem;
+    margin-top: 1.5rem;
+    background-color: #F7F6FC;
+    border-radius: 0.5rem;
+    overflow-y: scroll;
+}
+
+.input_swoop{
+    display: none;
+}
+
+.label_swoop {
+    display: flex;
+    flex-direction: column;
+    padding: 1.1rem 0;
+    font-size: 1.1rem;
+    font-weight: normal;
+    cursor: pointer;
+    text-align: center;
+    background-color: #F7F6FC;
+    color: #4F4F4F;
+}
+
+.label_swoop:hover {
+    background-color: #EEEDF2;
+}
+
+.label_swoop:has(>.input_swoop:checked) {
+    background-color: #057DE5;
+    color: #fff;
+}
+
+/* ==================
+Save
+=====================*/
+
+.save {
+    width: 22.2rem;
+    margin: 3rem auto 5rem auto;
+}
+
+.save #save-val{
+    width: 100%;
+    border: none;
+    background-color: #057DE5;
+    color: #fff;
+    padding: 1.5rem 3.2rem;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+}
+
+/* ==================
+Right side
+=====================*/
+
+.right {
+    background-color: #F7F6FC;
+    margin-left: 30rem;
+	height: 100vh;
+    overflow-y: scroll;
+}
+
+.title {
+    margin-top: 5rem;
+    margin-left: 2rem;
+}
+
+.title .line{
+    width: 2.5rem;
+    height: 0.2rem;
+    color: #057DE5;
+    margin-top: 1.5rem;
+    background-color: #057DE5;
+}
+
+.metrics {
+	display: flex;
+    flex-wrap: wrap;
+    margin: 3rem 2rem 0 2rem;
+}
+
+.metric {
+    background-color: #fff;
+    flex-grow: 4;
+    flex-basis: 20%;
+    padding: 2.4rem 2rem 2.4rem 2rem;
+}
+
+.metric:not(:last-child) {
+    margin-right: 2rem;
+}
+
+.metric .first_title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    vertical-align: middle;
+}
+
+.elevation .first_title {
+    color: #636EFA;
+}
+
+.horz_speed .first_title {
+    color: #FF0B0B;
+}
+
+.vert_speed .first_title {
+    color: #00CC96;
+}
+
+.dive_angle .first_title {
+    color: #AB63FA;
+}
+
+
+/* ==================
+Graphs
+=====================*/
+
+.graphs {
+	display: flex;
+    flex-wrap: wrap;
+    margin: 0 2rem 0 2rem;
+}
+
+.graph {
+    background-color: #fff;
+    flex-grow: 4;
+    flex-basis: 20%;
+
+    margin-top: 2rem;
+}
+
+.graphs h2 {
+    padding: 2.4rem 0 0 2rem;
+    margin: 0;
+}
+
+.overview, .map  { 
+    flex: 1 100%; 
+    background-color: #fff;
+}
+
+.side_view_of_flight_path { 
+    flex: 1; 
+    margin-right: 2rem;
+    background-color: #fff;
+}
+
+.speed_during_swoop { 
+    flex: 1; 
+    background-color: #fff;
+}
+
+
+/* ==================
+Footer
+=====================*/
+
+.footer {
+    margin-top: 3rem;
+    width: 100%;
+    background-color: #057DE5;
+}
+
+.footer_text {
+    padding: 1.2rem;
+    text-align: center;
+    color: #fff;
+}
