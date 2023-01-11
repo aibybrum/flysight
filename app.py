@@ -60,7 +60,7 @@ app.layout = html.Div([
             'border-radius': '10px',
             'marginTop': '2rem',
             'width': '20%',
-            'backgroundColor': 'blue'
+            'backgroundColor': 'white'
         }),
         html.Div(children=[
             dcc.Graph(
@@ -74,7 +74,7 @@ app.layout = html.Div([
         'display': 'flex',
     }),
 ], style={
-    'backgroundColor': 'red',
+    'backgroundColor': 'white',
     'padding': '0',
     'margin': '0'
 })

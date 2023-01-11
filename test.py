@@ -20,7 +20,7 @@ app.layout = html.Div(className="center", children=[
             html.Div("GENERATOR 3000", className="generator3000"),
         ]),  
         dcc.Upload(className='upload', children=html.Div([
-                html.Div(className="upload-data", children=[
+            html.Div(className="upload-data", children=[
                     'Drop your file here, or ',
                     html.A('browse'),
                     html.Div('Support: .csv', className="support")
@@ -59,22 +59,25 @@ app.layout = html.Div(className="center", children=[
             html.Div(className="line")
         ]),
         html.Div(className="metrics", children=[
-            html.Div(className="elevation", children=[
-                html.H3('493,58 ft', id='elevation'),
+            html.Div(className="metric elevation", children=[
+                html.H3('493,58 feet', id='elevation'),
                 html.Label('Elevation'),
             ]),
-            html.Div(className="horz_speed", children=[
+            html.Div(className="metric horz_speed", children=[
                 html.H3('87,47 km/u', id='horz_speed'),
                 html.Label('Horizontal speed'),
             ]),
-            html.Div(className="vert_speed", children=[
+            html.Div(className="metric vert_speed", children=[
                 html.H3('112,66 km/u', id='vert_speed'),
                 html.Label('Vertical speed'),
             ]),
-            html.Div(className="dive_angle", children=[
+            html.Div(className="metric dive_angle", children=[
                 html.H3('40,10 °', id='dive_angle'),
                 html.Label('Dive angle'),
             ]),
+        ]),
+        html.Div(className="graphs", children=[
+
         ]),
     ]),
 ])

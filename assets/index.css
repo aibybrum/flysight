@@ -46,41 +46,31 @@ Left side
     overflow-y: scroll;
 }
 
-/*
-.left {
-    background-color: #fff;
-    position: fixed;
-    left: 0; 
-    top: 0; 
-    bottom: 0;
-    width: 30rem;
-    z-index:2;
-    overflow-y: scroll;
-}
-*/
-
 /* ==================
 Logo
 =====================*/
 
 .logo {
-    text-align: center;
-    margin-top: 5rem;
-    font-family: 'Roboto', sans-serif;
+    margin: 5rem auto 0 auto;
+    width: 22.2rem;
 }
 
-.logo .swoop {
+.logo > * {
+    text-align: center;
+}
+
+.swoop {
     font-size: 4.8rem;
     font-weight: bold;
+    height: 4.8rem;
 	color: #4F4F4F;
 }
 
-.logo .generator3000 {
+.generator3000 {
     font-size: 1rem;
     font-weight: light;
     letter-spacing: 0.53rem;
 	color: #057DE5;
-    margin-top: -1.5rem;
 }
 
 /* ==================
@@ -88,7 +78,6 @@ Upload
 =====================*/
 
 .upload {    
-    font-family: 'Roboto', sans-serif;
     width: 22.2rem;
     height: 6.8rem;
     border-width: 0.1rem;
@@ -101,7 +90,7 @@ Upload
 .upload-data {    
     font-size: 1.2rem;
     text-align: center;
-    margin-top: 1.9rem;
+    margin-top: 2rem;
 }
 
 .upload-data a{
@@ -112,6 +101,7 @@ Upload
     font-weight: bold;
     font-size: 0.9rem;
     color: #CEDAE6;
+    margin-top: 0.3rem;
 }
 
 /* ==================
@@ -133,7 +123,7 @@ Y axis
 
 .label_y_check {
     display: inline-block;
-    padding: 0.4rem 1.1rem;
+    padding: 0.5rem 1.1rem;
     font-size: 1.2rem;
     cursor: pointer;
     margin-right: 1rem;
@@ -175,7 +165,7 @@ Units
 .label_units_radio {
     width: 50%;
     display: inline-block;
-    padding: 0.4rem 1.1rem;
+    padding: 0.5rem 1.1rem;
     font-size: 1.2rem;
     cursor: pointer;
     margin-top: 1rem;
@@ -211,7 +201,7 @@ Swoops
 
 .swoops .window {
     width: 100%;
-    height: 11.55rem;
+    height: 10.2rem;
     margin-top: 1.5rem;
     background-color: #F7F6FC;
     border-radius: 0.5rem;
@@ -269,7 +259,7 @@ Right side
     background-color: #F7F6FC;
     margin-left: 30rem;
 	height: 100vh;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .title {
@@ -281,16 +271,29 @@ Right side
     width: 2.5rem;
     height: 0.2rem;
     color: #057DE5;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     background-color: #057DE5;
 }
 
 .metrics {
 	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap;
-    margin: 3rem;
-    width: auto;
+    margin: 3rem 3rem 0 3rem;
+}
+
+.metric {
+    background-color: #fff;
+    padding: 2.5rem 5rem 2.5rem 2rem;
+    width: 25%;
+}
+
+.metric:not(:first-child) {
+    margin-left: 2rem;
+}
+
+.metric h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
 }
 
 .elevation {
