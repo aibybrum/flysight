@@ -4,6 +4,7 @@ import dash
 import base64
 import logging
 import pandas as pd
+import jsonpickle
 import plotly.graph_objects as go
 from flysight.jump.jump import Jump
 
@@ -19,14 +20,14 @@ app.layout = html.Div(className="center", children=[
             html.Div("SW00P", className="swoop"),
             html.Div("GENERATOR 3000", className="generator3000"),
         ]),  
-        dcc.Upload(className='upload', children=html.Div([
+        dcc.Upload(id='upload', className='upload', children=html.Div([
             html.Div(className="upload-data", children=[
-                    'Drop your file here, or ',
-                    html.A('browse'),
-                    html.Div('Support: .csv', className="support")
-                ]),
+                'Drop your file here, or ',
+                html.A('browse'),
+                html.Div('Support: .csv', className="support")
             ]),
-        ),
+            html.Div(id="hidden-div"),
+        ])),
         html.Div(className="swoops", children=[
             html.H2("Sw00ps"),
             html.Div(className="window", children=[
@@ -101,23 +102,39 @@ app.layout = html.Div(className="center", children=[
 ])
 
 
-@app.callback(Input('upload-data', 'contents'),
-              State('upload-data', 'filename'))
+def safe_swoop(jump):
+    my_writer_obj = open("./data/swoops.json", mode='w')
+    json_data = jsonpickle.encode(jump)
+    my_writer_obj.write(json_data)
+    my_writer_obj.close()
+
+
+def read_swoops():
+    my_writer_obj = open("./data/swoops.json", mode='r')
+    json_data = my_writer_obj.read()
+    jump = jsonpickle.decode(json_data)
+    print(jump)
+    print(jump.get_df())
+
+
+@app.callback(Output('hidden-div', 'children'),
+              Input('upload', 'contents'),
+              State('upload', 'filename'))
 def upload_file(contents, filename):
-    content_type, content_string = contents.split(',')
-    decoded = base64.b64decode(content_string)
-    try:
-        if 'csv' or 'CSV' in filename:
-            # Assume that the user uploaded a CSV file
-            df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
-            print(df)
-    except Exception as e:
-        print(e)
-        return html.Div([
-            'There was an error processing this file.'
-        ])
+    if contents is not None:
+        content_type, content_string = contents.split(',')
+        decoded = base64.b64decode(content_string)
+        try:
+            if 'csv' or 'CSV' in filename:
+                df = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
+                safe_swoop(Jump(filename, df))
+        except Exception as e:
+            print(e)
+            return html.Div([
+                'There was an error processing this file.'
+            ])
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8052)
 

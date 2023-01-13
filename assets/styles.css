@@ -131,6 +131,10 @@ Upload
     margin-top: 0.3rem;
 }
 
+#hidden-div {
+    display: none;
+}
+
 /* ==================
 Y axis
 =====================*/

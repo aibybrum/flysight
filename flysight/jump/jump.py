@@ -21,16 +21,18 @@ class Jump(Landing, Exit):
         self.name = name
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.df}'
 
 
-# def main():
-#     name = "J1"
-#     data = pd.read_csv(f'./../../data/{name}.csv', skiprows=[1])
-#     jump = Jump(name, data)
+def main():
+    name = "J1"
+    data = pd.read_csv(f'./../../data/raw/{name}.csv', skiprows=[1])
+    jump = Jump(name, data)
 
-#     jump.plt_exit()
+    jump.plt_exit_point()
+    jump.plt_exit()
+    jump.plt_landing_point()
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

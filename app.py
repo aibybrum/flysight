@@ -164,5 +164,5 @@ def update_graph(contents, filename, selected, speed_metric, distance_metric):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8051)
 
