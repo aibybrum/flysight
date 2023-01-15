@@ -1,10 +1,16 @@
+import os
 import numpy as np
 import pandas as pd
 import flysight.dataset.helpers as helpers
+from dotenv import load_dotenv
+
+load_dotenv()
+path = os.getenv("PATH")
 
 
 class Dataset:
-    def __init__(self, df):
+    def __init__(self, filename, df):
+        self.filename = filename
         self.df = df
         
     def get_total_seconds(self):
@@ -60,3 +66,14 @@ class Dataset:
             'horz_speed_km/u': self.get_horizontal_speed('km/u'),
             'heading': self.df.heading,
             'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph'))})
+
+    def get_name(self):
+        return self.filename + pd.to_datetime(self.df.time[0]).strftime("-D%m-%d-%YT%H%M")
+
+    def save(self):
+        dataframe = self.create()
+        print(os.path.join(path, self.get_name() + '.csv'))
+        dataframe.to_csv(os.path.join(path, self.get_name() + '.csv'), index=False)
+
+    def __str__(self):
+        return f'{ self.get_name() }'

@@ -7,6 +7,7 @@ import pandas as pd
 import jsonpickle
 import plotly.graph_objects as go
 from flysight.jump.jump import Jump
+from flysight.dataset.dataset import Dataset
 
 from dash import dcc, html, dash_table, callback
 from dash.dependencies import Input, Output, State
@@ -32,8 +33,8 @@ app.layout = html.Div(className="center", children=[
             html.H2("Sw00ps"),
             html.Div(className="window", children=[
                 dcc.RadioItems(
-                    ['09-01-2023', '10-01-2023', '11-01-2023', '12-01-2023', '13-01-2023', '14-01-2023'], '09-01-2023',
-                    inline=False, className="swoop", inputClassName="input_swoop", labelClassName="label_swoop"
+                    [],
+                    inline=False, className="swoop", inputClassName="input_swoop", labelClassName="label_swoop", id="swoops"
                 ),
             ]),
         ]),
@@ -102,19 +103,8 @@ app.layout = html.Div(className="center", children=[
 ])
 
 
-def safe_swoop(jump):
-    my_writer_obj = open("./data/swoops.json", mode='w')
-    json_data = jsonpickle.encode(jump)
-    my_writer_obj.write(json_data)
-    my_writer_obj.close()
-
-
-def read_swoops():
-    my_writer_obj = open("./data/swoops.json", mode='r')
-    json_data = my_writer_obj.read()
-    jump = jsonpickle.decode(json_data)
-    print(jump)
-    print(jump.get_df())
+def get_swoops():
+    print()
 
 
 @app.callback(Output('hidden-div', 'children'),
@@ -127,7 +117,10 @@ def upload_file(contents, filename):
         try:
             if 'csv' or 'CSV' in filename:
                 df = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
-                safe_swoop(Jump(filename, df))
+                name = filename.rsplit('.', 1)[0]
+                dataset = Dataset(name, df)
+                dataset.save()
+                print(f'Uploaded file: {dataset.get_name()}')
         except Exception as e:
             print(e)
             return html.Div([
