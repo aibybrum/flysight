@@ -2,167 +2,196 @@ import os
 import io
 import dash
 import base64
-import logging
 import pandas as pd
-import plotly.graph_objects as go
+import glob
+
+import plotly.io as pio
 from flysight.jump.jump import Jump
+from flysight.dataset.dataset import Dataset
+import flysight.jump.helpers as helpers
 
 from dash import dcc, html, dash_table, callback
 from dash.dependencies import Input, Output, State
 from dotenv import load_dotenv
 
+themes = ["plotly_white", "plotly_dark", "ggplot2", "simple_white"]
+pio.templates.default = themes[3]
+
 load_dotenv()
-logging.basicConfig(level=logging.INFO)
+path = os.getenv("DES_PATH")
 token = os.getenv("TOKEN")
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__)
 app.title = 'Sw00pGenerator3000'
 
-app.layout = html.Div([
-    html.Div(children=[
-        html.Div(children=[
-            dcc.Upload(
-                id='upload-data',
-                children=html.Div([
-                    'Drag and Drop or ',
-                    html.A('Select Files')
-                ]),
-                style={
-                    'width': '100%',
-                    'height': '60px',
-                    'lineHeight': '60px',
-                    'borderWidth': '1px',
-                    'borderStyle': 'dashed',
-                    'borderRadius': '5px',
-                    'textAlign': 'center',
-                },
-            ),
+# jump = Jump()
+swoops = [os.path.split(file)[1].split('.')[0] for file in glob.glob(path + '*.csv')]
 
-            html.Label('Y-axis:', style={'paddingTop': '2rem'}),
-            dcc.Dropdown(
+app.layout = html.Div(className="center", children=[
+    html.Div(className="left", children=[
+        html.Div(className="logo", children=[
+            html.Div("SW00P", className="swoop"),
+            html.Div("GENERATOR 3000", className="generator3000"),
+        ]),
+        dcc.Upload(id='upload', className='upload', children=html.Div([
+            html.Div(className="upload-data", children=[
+                'Drop your file here, or ',
+                html.A('browse'),
+                html.Div('Support: .csv', className="support")
+            ]),
+            html.Div(id="hidden-div"),
+        ])),
+        html.Div(className="swoops", children=[
+            html.H2("Sw00ps"),
+            html.Div(className="window", children=[
+                dcc.RadioItems(
+                    swoops,
+                    id="swoops",
+                    inline=False, className="swoop", inputClassName="input_swoop", labelClassName="label_swoop"
+                ),
+                html.Div(id="hidden-div-2"),
+            ]),
+        ]),
+        html.Div(className="yaxis", children=[
+            html.H2("Y-axis"),
+            dcc.Checklist(
                 ['Elevation', 'Horizontal speed', 'Vertical speed', 'Dive angle'],
                 ['Elevation', 'Horizontal speed', 'Vertical speed'],
-                multi=True,
-                id='y_drop',
-            ),
-
-            html.Label('Metrics:', style={'paddingTop': '2rem'}),
-            html.Label('Speed:', style={'paddingTop': '1rem'}),
-            dcc.Dropdown(['km/u', 'mph'], 'km/u', id='speed_metric'),
-
-            html.Label('Distance:', style={'paddingTop': '1rem'}),
-            dcc.Dropdown(['m', 'ft'], 'm', id='distance_metric'),
-        ], style={
-            'padding': '2rem',
-            'margin': '1rem',
-            'border-radius': '10px',
-            'marginTop': '2rem',
-            'width': '20%',
-            'backgroundColor': 'white'
-        }),
-        html.Div(children=[
-            dcc.Graph(
-                id='first_graph',
-            ),
-        ], style={
-            'border-radius': '10px',
-            'width': '100%',
-        }),
-    ], style={
-        'display': 'flex',
-    }),
-], style={
-    'backgroundColor': 'white',
-    'padding': '0',
-    'margin': '0'
-})
-
-
-def parse_data(contents, filename):
-    global df
-    content_type, content_string = contents.split(',')
-    decoded = base64.b64decode(content_string)
-    try:
-        if 'csv' or 'CSV' in filename:
-            csv_file = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
-            df = Jump("test", csv_file)
-    except Exception as e:
-        logging.error(f"{e}")
-        return html.Div([
-            'There was an error processing this file.'
-        ])
-    return df
+                className="y_check", inputClassName="input_y_check", labelClassName="label_y_check", id="y_axis"
+            )
+        ]),
+        html.Div(className="units", children=[
+            html.H2("Units"),
+            dcc.RadioItems(['km/u', 'mph'], 'km/u', className="units_radio", inputClassName="input_units_radio",
+                           labelClassName="label_units_radio", id="speed_metric"),
+            dcc.RadioItems(['m', 'ft'], 'm', inputClassName="input_units_radio", labelClassName="label_units_radio",
+                           id="distance_metric"),
+        ]),
+        html.Div(className="save", children=[
+            html.Button('Save graphs', id='save-val', n_clicks=0),
+        ]),
+    ]),
+    html.Div(className="right", children=[
+        html.Div(className="title", children=[
+            html.H1(id="dashboard_title"),
+            html.Div(className="line")
+        ]),
+        html.Div(className="metrics", children=[
+            html.Div(className="metric elevation", children=[
+                html.Div(className="first_title", id='elevation'),
+                html.Div('Elevation', className="second_title"),
+            ]),
+            html.Div(className="metric horz_speed", children=[
+                html.Div(className="first_title", id='horz_speed'),
+                html.Div('Horizontal speed', className="second_title"),
+            ]),
+            html.Div(className="metric vert_speed", children=[
+                html.Div(className="first_title", id='vert_speed'),
+                html.Div('Vertical speed', className="second_title"),
+            ]),
+            html.Div(className="metric dive_angle", children=[
+                html.Div(className="first_title", id='dive_angle'),
+                html.Div('Dive angle', className="second_title"),
+            ]),
+        ]),
+        html.Div(className="graphs", children=[
+            html.Div(className="graph overview", children=[
+                dcc.Graph(id='overview'),
+            ]),
+            html.Div(className="graph side_view_of_flight_path", children=[
+                html.H2("Side view of flight path"),
+                dcc.Graph(id='side_view_of_flight_path'),
+            ]),
+            html.Div(className="graph speed_during_swoop", children=[
+                html.H2("Speed during swoop"),
+                dcc.Graph(id='speed_during_swoop'),
+            ]),
+            html.Div(className="graph map", children=[
+                dcc.Graph(id='map'),
+            ]),
+        ]),
+        html.Div(className="footer", children=[
+            html.Div("© SWOOPGENERATOR3000 inc. 2023 - bram langmans", className="footer_text"),
+        ]),
+    ]),
+])
 
 
 @app.callback(
-    Output('first_graph', 'figure'),
     [
-        Input('upload-data', 'contents'),
-        Input('upload-data', 'filename'),
-        Input('y_drop', 'value'),
+        Output('dashboard_title', 'children'),
+        Output('overview', 'figure'),
+        Output('side_view_of_flight_path', 'figure'),
+        Output('speed_during_swoop', 'figure'),
+        Output('map', 'figure')
+    ],
+    [
+        Input('swoops', 'value'),
+        Input('y_axis', 'value'),
         Input('speed_metric', 'value'),
         Input('distance_metric', 'value')
-    ])
-def update_graph(contents, filename, selected, speed_metric, distance_metric):
-    fig = {
-        'layout': go.Layout(
-            xaxis={"visible": True},
-            yaxis={"visible": True},
-            annotations=[
-                {
-                    "text": "Please upload file",
-                    "xref": "paper",
-                    "yref": "paper",
-                    "showarrow": False,
-                    "font": {
-                        "size": 28
-                    }
-                }
-            ]
-        )
-    }
+    ]
+)
+def select_jump(value, selected, speed_metric, distance_metric):
+    global jump
+    fig = helpers.empty_layout("Please select Sw00p")
+    print(jump.get_name())
+    if value is not None:
+        df = pd.read_csv(os.path.join(path, str(value) + '.csv'))
+        jump = Jump(value, df)
+        overview = jump.plt_overview(selected, speed_metric, distance_metric)
+        print(jump.get_name())
+        return [f'F@ck Yea#!, {value}', overview, jump.plt_side_view(), jump.plt_speed(), jump.plt_map()]
+    return ['F@ck Yea#!', fig, fig, fig, fig]
 
-    if contents:
-        jump = parse_data(contents, filename)
-        landing_df = jump.get_landing_df()
-        if len(selected) != 0:
-            dic = jump.get_dic(speed_metric)
-            d_metric = landing_df['horz_distance_m'] if distance_metric == "m" else landing_df['horz_distance_ft']
 
-            plotly_data = []
-            layout_kwargs = {'xaxis': {'domain': [0.06 * (len(selected) - 1), 1],
-                                       'title': 'Horizontal distance (' + distance_metric + ')'}}
+@app.callback(
+    [
+        Output("elevation", "children"),
+        Output("horz_speed", "children"),
+        Output("vert_speed", "children"),
+        Output("dive_angle", "children"),
+    ],
+    [
+        Input('swoops', 'value'),
+        Input("overview", "hoverData")
+    ]
+)
+def hover_overview(value, hover_data):
+    global jump
+    if value is not None and hover_data is not None:
+        x = hover_data["points"][0]['x']
+        elevation = round(jump.landing_df["elevation"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
+        horz_speed = round(jump.landing_df["horz_speed_km/u"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
+        vert_speed = round(jump.landing_df["vert_speed_km/u"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
+        dive_angle = round(jump.landing_df["dive_angle"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
+        return [f'{elevation} feet', f'{horz_speed} km/u', f'{vert_speed} km/u', f'{dive_angle} °']
+    return ['---,-- feet', '---,-- km/u', '---,-- km/u', '---,-- °']
 
-            for i, s in enumerate(selected):
-                axis_name = 'yaxis' + str(i + 1) * (i > 0)
-                yaxis = 'y' + str(i + 1) * (i > 0)
-                plotly_data.append(go.Scatter(go.Scatter(
-                    x=d_metric,
-                    y=dic[s]['col'],
-                    name=s,
-                    mode='lines',
-                    line=dict(color=dic[s]['color'], width=1.2),
-                    showlegend=False,
-                    hovertemplate=dic[s]['hovertemplate'],
-                ),
-                ))
-                layout_kwargs[axis_name] = {
-                    'position': i * 0.06, 'side': 'left', 'title': s + ' (' + dic[s]['metric'] + ')',
-                    'titlefont': {'size': 10, 'color': dic[s]['color']}, 'title_standoff': 0,
-                    'anchor': 'free', 'tickfont': {'size': 10, 'color': dic[s]['color']}, 'showgrid': False,
-                }
 
-                plotly_data[i]['yaxis'] = yaxis
-                if i > 0:
-                    layout_kwargs[axis_name]['overlaying'] = 'y'
-
-            fig = go.Figure(data=plotly_data, layout=go.Layout(**layout_kwargs))
-            fig.update_layout(hovermode="x unified")
-    return fig
+@app.callback(
+    Output('swoops', 'options'),
+    Input('upload', 'contents'),
+    State('upload', 'filename'))
+def upload_file(contents, filename):
+    if contents is not None:
+        content_type, content_string = contents.split(',')
+        decoded = base64.b64decode(content_string)
+        try:
+            if 'csv' or 'CSV' in filename:
+                df = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
+                name = filename.rsplit('.', 1)[0]
+                dataset = Dataset(name, df)
+                if dataset.get_name() not in swoops:
+                    dataset.save()
+                    swoops.insert(0, dataset.get_name())
+        except Exception as e:
+            print(e)
+            return html.Div([
+                'There was an error processing this file.'
+            ])
+    return [{'label': s, 'value': s} for s in swoops]
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8051)
-
+    app.run_server(debug=True, port=8052)

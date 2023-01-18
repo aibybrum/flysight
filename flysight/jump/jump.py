@@ -1,12 +1,14 @@
 from flysight.jump.landing.landing import Landing
 from flysight.jump.exit.exit import Exit
+import pandas as pd
 
 
 class Jump(Landing, Exit):
-    def __init__(self, name, df):
+    def __init__(self, name="empty", df=pd.DataFrame()):
         self.name = name
-        self.df = df
-        super().__init__(self.df)
+        if not df.empty:
+            self.df = df
+            super().__init__(self.df)
 
     def get_df(self):
         return self.df

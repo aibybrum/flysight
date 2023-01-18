@@ -5,7 +5,7 @@ import flysight.dataset.helpers as helpers
 from dotenv import load_dotenv
 
 load_dotenv()
-path = os.getenv("PATH")
+path = os.getenv("DES_PATH")
 
 
 class Dataset:
@@ -72,7 +72,6 @@ class Dataset:
 
     def save(self):
         dataframe = self.create()
-        print(os.path.join(path, self.get_name() + '.csv'))
         dataframe.to_csv(os.path.join(path, self.get_name() + '.csv'), index=False)
 
     def __str__(self):

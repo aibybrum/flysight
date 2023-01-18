@@ -2,8 +2,11 @@ import os
 import peakutils as pu
 import matplotlib.pylab as pl
 import matplotlib.gridspec as gridspec
+import plotly.graph_objects as go
+import plotly.express as px
 from dotenv import load_dotenv
 from flysight.jump.exit.exit import Exit
+import flysight.jump.helpers as helpers
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -109,6 +112,78 @@ class Landing:
         pl.ylabel("Vertical speed (mph)")
 
         pl.show()
+
+    def plt_speed(self):
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=self.landing_df['horz_distance_m'].iloc[self.get_max_horz_speed():self.get_stop() + 1],
+                                 y=self.landing_df['horz_speed_mph'].iloc[self.get_max_horz_speed():self.get_stop() + 1],
+                                 showlegend=False))
+        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_max_horz_speed()]],
+                                 y=[self.landing_df['horz_speed_mph'][self.get_max_horz_speed()]],
+                                 showlegend=False, text=["Max Horz Speed"], textposition="top right",
+                                 mode="markers+text"))
+        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_stop()]],
+                                 y=[self.landing_df['horz_speed_mph'][self.get_stop()]],
+                                 showlegend=False, text=["stop"], textposition="top left", mode="markers+text"))
+        return fig
+
+    def plt_side_view(self):
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=self.landing_df['horz_distance_m'].iloc[self.get_top_of_turn():self.get_stop() + 1],
+                                 y=self.landing_df['elevation'].iloc[self.get_top_of_turn():self.get_stop() + 1],
+                                 showlegend=False))
+        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_top_of_turn()]],
+                                 y=[self.landing_df['elevation'][self.get_top_of_turn()]],
+                                 showlegend=False, text=["Top of turn"], textposition="top right", mode="markers+text"))
+        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_stop()]],
+                                 y=[self.landing_df['elevation'][self.get_stop()]],
+                                 showlegend=False, text=["stop"], textposition="top left", mode="markers+text"))
+        return fig
+
+    def plt_map(self):
+        fig = px.line_mapbox(self.landing_df.iloc[self.get_top_of_turn():self.get_stop() + 1], lat="lat", lon="lon", zoom=16)
+        fig.update_layout(mapbox_style="satellite-streets", mapbox_accesstoken=token)
+        fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+        return fig
+
+    def plt_overview(self, selected, speed_metric, distance_metric):
+        if len(selected) != 0:
+            dic = self.get_dic(speed_metric)
+            landing_df = self.get_landing_df()
+            d_metric = landing_df['horz_distance_m'] if distance_metric == "m" else landing_df['horz_distance_ft']
+
+            plotly_data = []
+            layout_kwargs = {'xaxis': {'domain': [0.06 * (len(selected) - 1), 1],
+                                       'title': 'Horizontal distance (' + distance_metric + ')'}}
+
+            for i, s in enumerate(selected):
+                axis_name = 'yaxis' + str(i + 1) * (i > 0)
+                yaxis = 'y' + str(i + 1) * (i > 0)
+                plotly_data.append(go.Scatter(go.Scatter(
+                    x=d_metric,
+                    y=dic[s]['col'],
+                    name=s,
+                    mode='lines',
+                    line=dict(color=dic[s]['color'], width=1.2),
+                    showlegend=False,
+                    hovertemplate=dic[s]['hovertemplate'],
+                ),
+                ))
+                layout_kwargs[axis_name] = {
+                    'position': i * 0.06, 'side': 'left', 'title': s + ' (' + dic[s]['metric'] + ')',
+                    'titlefont': {'size': 10, 'color': dic[s]['color']}, 'title_standoff': 0,
+                    'anchor': 'free', 'tickfont': {'size': 10, 'color': dic[s]['color']}, 'showgrid': False,
+                }
+
+                plotly_data[i]['yaxis'] = yaxis
+                if i > 0:
+                    layout_kwargs[axis_name]['overlaying'] = 'y'
+
+            fig = go.Figure(data=plotly_data, layout=go.Layout(**layout_kwargs))
+            fig.update_layout(hovermode="x unified")
+            return fig
+        else:
+            return helpers.empty_layout("Please select Y-axis")
 
     def save_landing(self, name):
         self.landing_df.to_csv(f'././data/landing/{name}.csv', index=False)
