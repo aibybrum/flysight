@@ -4,7 +4,7 @@ import dash
 import base64
 import pandas as pd
 import glob
-
+import plotly.graph_objects as go
 import plotly.io as pio
 from flysight.jump.jump import Jump
 from flysight.dataset.dataset import Dataset
@@ -24,7 +24,6 @@ token = os.getenv("TOKEN")
 app = dash.Dash(__name__)
 app.title = 'Sw00pGenerator3000'
 
-# jump = Jump()
 swoops = [os.path.split(file)[1].split('.')[0] for file in glob.glob(path + '*.csv')]
 
 app.layout = html.Div(className="center", children=[
@@ -49,7 +48,8 @@ app.layout = html.Div(className="center", children=[
                     id="swoops",
                     inline=False, className="swoop", inputClassName="input_swoop", labelClassName="label_swoop"
                 ),
-                html.Div(id="hidden-div-2"),
+                dcc.Store(id='storage')
+                # html.Div(id="storage"),
             ]),
         ]),
         html.Div(className="yaxis", children=[
@@ -120,29 +120,39 @@ app.layout = html.Div(className="center", children=[
 @app.callback(
     [
         Output('dashboard_title', 'children'),
+        Output('storage', 'data'),
+    ],
+    Input('swoops', 'value'),
+)
+def select_jump(value):
+    title = 'F@ck Yea#!'
+    if value is not None:
+        df = pd.read_csv(os.path.join(path, str(value) + '.csv'))
+        return [f'{title}, {value}',[value, df.to_json(orient="split")]]
+    return [title, None]
+
+
+@app.callback(
+    [
         Output('overview', 'figure'),
         Output('side_view_of_flight_path', 'figure'),
         Output('speed_during_swoop', 'figure'),
         Output('map', 'figure')
     ],
     [
-        Input('swoops', 'value'),
+        Input('storage', 'data'),
         Input('y_axis', 'value'),
         Input('speed_metric', 'value'),
         Input('distance_metric', 'value')
     ]
 )
-def select_jump(value, selected, speed_metric, distance_metric):
-    global jump
-    fig = helpers.empty_layout("Please select Sw00p")
-    print(jump.get_name())
-    if value is not None:
-        df = pd.read_csv(os.path.join(path, str(value) + '.csv'))
-        jump = Jump(value, df)
-        overview = jump.plt_overview(selected, speed_metric, distance_metric)
-        print(jump.get_name())
-        return [f'F@ck Yea#!, {value}', overview, jump.plt_side_view(), jump.plt_speed(), jump.plt_map()]
-    return ['F@ck Yea#!', fig, fig, fig, fig]
+def plt_graphs(df, y_axis, speed_metric, distance_metric):
+    empty = helpers.empty_layout("Please select Sw00p")
+    if df is not None:
+        jump = Jump(df[0], pd.read_json(df[1], orient="split"))
+        overview = jump.plt_overview(y_axis, speed_metric, distance_metric)
+        return [overview, jump.plt_side_view(), jump.plt_speed(), jump.plt_map()]
+    return [empty] * 4
 
 
 @app.callback(
@@ -153,13 +163,13 @@ def select_jump(value, selected, speed_metric, distance_metric):
         Output("dive_angle", "children"),
     ],
     [
-        Input('swoops', 'value'),
+        Input('storage', 'data'),
         Input("overview", "hoverData")
     ]
 )
-def hover_overview(value, hover_data):
-    global jump
-    if value is not None and hover_data is not None:
+def hover_overview(df, hover_data):
+    if df is not None and hover_data is not None:
+        jump = Jump(df[0], pd.read_json(df[1], orient="split"))
         x = hover_data["points"][0]['x']
         elevation = round(jump.landing_df["elevation"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
         horz_speed = round(jump.landing_df["horz_speed_km/u"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
@@ -178,7 +188,7 @@ def upload_file(contents, filename):
         content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
         try:
-            if 'csv' or 'CSV' in filename:
+            if '.csv' or '.CSV' in filename:
                 df = pd.read_csv(io.StringIO(decoded.decode('utf-8')), skiprows=[1])
                 name = filename.rsplit('.', 1)[0]
                 dataset = Dataset(name, df)

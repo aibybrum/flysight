@@ -27,7 +27,7 @@ class Landing:
         return [elevation_lows[i] for i in range(0, len(elevation_lows)) 
                 if self.exit_df.elevation[elevation_lows[i]] > 250][-1]
 
-    def get_dic(self, metric):
+    def get_layout_settings(self, metric):
         return {
             'Elevation': {'col': self.landing_df.elevation,
                           'color': '#636EFA',
@@ -62,11 +62,9 @@ class Landing:
         return self.landing_df.idxmax().horz_speed_mph
 
     def plt_landing_point(self):
-        # Test for getting the landing
         gs = gridspec.GridSpec(2, 2)
         pl.figure(figsize=(15,10))
 
-        # Elevation
         ax = pl.subplot(gs[0, :])
         elevation_peaks = pu.indexes(self.exit_df.elevation, thres=0.01, min_dist=1)
         elevation_lows = pu.indexes(-self.exit_df.elevation, thres=0.5, min_dist=1)
@@ -141,14 +139,37 @@ class Landing:
         return fig
 
     def plt_map(self):
-        fig = px.line_mapbox(self.landing_df.iloc[self.get_top_of_turn():self.get_stop() + 1], lat="lat", lon="lon", zoom=16)
-        fig.update_layout(mapbox_style="satellite-streets", mapbox_accesstoken=token)
-        fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
-        return fig
+        df = self.landing_df.iloc[self.get_top_of_turn():self.get_stop() + 1].reset_index(drop=True)
+        data = [go.Scattermapbox(
+            lat=df.lat,
+            lon=df.lon,
+            mode='lines',
+            marker=go.scattermapbox.Marker(
+                size=17,
+                color='rgb(255, 0, 0)',
+                opacity=0.7
+            ),
+            hoverinfo='none',
+        )]
+        layout = go.Layout(
+            autosize=True,
+            showlegend=False,
+            mapbox=dict(
+                accesstoken=token,
+                style="satellite-streets",
+                center=go.layout.mapbox.Center(
+                    lat=df.lat[round(len(df) / 2)],
+                    lon=df.lon[round(len(df) / 2)]
+                ),
+                pitch=0,
+                zoom=15
+            )
+        )
+        return go.Figure(data=data, layout=layout)
 
     def plt_overview(self, selected, speed_metric, distance_metric):
         if len(selected) != 0:
-            dic = self.get_dic(speed_metric)
+            dic = self.get_layout_settings(speed_metric)
             landing_df = self.get_landing_df()
             d_metric = landing_df['horz_distance_m'] if distance_metric == "m" else landing_df['horz_distance_ft']
 

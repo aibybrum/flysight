@@ -20,4 +20,4 @@ class Jump(Landing, Exit):
         self.name = name
 
     def __str__(self):
-        return f'{self.df}'
+        return f'{self.name}'
