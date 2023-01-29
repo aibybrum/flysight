@@ -4,24 +4,23 @@ import dash
 import base64
 import pandas as pd
 import glob
-import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
 import plotly.io as pio
 from flysight.jump.jump import Jump
 from flysight.dataset.dataset import Dataset
 import flysight.jump.helpers as helpers
 
-from dash import dcc, html, dash_table, callback
+from dash import dcc, html
 from dash.dependencies import Input, Output, State
 from dotenv import load_dotenv
 
 themes = ["plotly_white", "plotly_dark", "ggplot2", "simple_white"]
-pio.templates.default = themes[3]
+pio.templates.default = themes[0]
 
 load_dotenv()
 path = os.getenv("DES_PATH")
-token = os.getenv("TOKEN")
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = 'Sw00pGenerator3000'
 
 swoops = [os.path.split(file)[1].split('.')[0] for file in glob.glob(path + '*.csv')]
@@ -95,20 +94,56 @@ app.layout = html.Div(className="center", children=[
             ]),
         ]),
         html.Div(className="graphs", children=[
-            html.Div(className="graph overview", children=[
-                dcc.Graph(id='overview'),
+            dbc.Row(dbc.Col(
+                html.Div(className="graph overview", children=[
+                    dcc.Graph(id='overview')
+                ]),
+            )),
+            dbc.Row([
+                dbc.Col(
+                    html.Div(className="graph overhead", children=[
+                        dcc.Graph(id='overhead')
+                    ]),
+                    width=5
+                ),
+                dbc.Col(
+                    html.Div(className="graph map", children=[
+                        dcc.Graph(id='map')
+                    ]),
+                ),
             ]),
-            html.Div(className="graph side_view_of_flight_path", children=[
-                html.H2("Side view of flight path"),
-                dcc.Graph(id='side_view_of_flight_path'),
+            dbc.Row([
+                dbc.Col(
+                    html.Div(className="graph side_view_of_flight_path", children=[
+                        dcc.Graph(id='side_view_of_flight_path'),
+                    ]),
+                    width=5
+                ),
+                dbc.Col(
+                    html.Div(className="graph speed_during_swoop", children=[
+                        dcc.Graph(id='speed_during_swoop'),
+                    ]),
+                ),
             ]),
-            html.Div(className="graph speed_during_swoop", children=[
-                html.H2("Speed during swoop"),
-                dcc.Graph(id='speed_during_swoop'),
-            ]),
-            html.Div(className="graph map", children=[
-                dcc.Graph(id='map'),
-            ]),
+            dbc.Collapse(
+                dbc.Row([
+                    dbc.Col(
+                        html.Div(className="graph debug_elevation", children=[
+                            dcc.Graph(id='debug_elevation'),
+                        ]),
+                    ),
+                    dbc.Col(
+                        html.Div(className="graph debug_horz_speed", children=[
+                            dcc.Graph(id='debug_horz_speed'),
+                        ]),
+                    ),
+                    dbc.Col(
+                        html.Div(className="graph debug_vert_speed", children=[
+                            dcc.Graph(id='debug_vert_speed'),
+                        ]),
+                    ),
+                ]),
+            ),
         ]),
         html.Div(className="footer", children=[
             html.Div("© SWOOPGENERATOR3000 inc. 2023 - bram langmans", className="footer_text"),
@@ -128,16 +163,20 @@ def select_jump(value):
     title = 'F@ck Yea#!'
     if value is not None:
         df = pd.read_csv(os.path.join(path, str(value) + '.csv'))
-        return [f'{title}, {value}',[value, df.to_json(orient="split")]]
+        return [f'{title}, {value}', [value, df.to_json(orient="split")]]
     return [title, None]
 
 
 @app.callback(
     [
         Output('overview', 'figure'),
+        Output('overhead', 'figure'),
         Output('side_view_of_flight_path', 'figure'),
         Output('speed_during_swoop', 'figure'),
-        Output('map', 'figure')
+        Output('map', 'figure'),
+        Output('debug_elevation', 'figure'),
+        Output('debug_horz_speed', 'figure'),
+        Output('debug_vert_speed', 'figure')
     ],
     [
         Input('storage', 'data'),
@@ -150,9 +189,18 @@ def plt_graphs(df, y_axis, speed_metric, distance_metric):
     empty = helpers.empty_layout("Please select Sw00p")
     if df is not None:
         jump = Jump(df[0], pd.read_json(df[1], orient="split"))
-        overview = jump.plt_overview(y_axis, speed_metric, distance_metric)
-        return [overview, jump.plt_side_view(), jump.plt_speed(), jump.plt_map()]
-    return [empty] * 4
+
+        jump.set_landing_df(helpers.set_start_point(jump.get_landing_df(), jump.get_top_of_turn()))
+
+        return [jump.plt_overview(y_axis, speed_metric, distance_metric),
+                jump.plt_overhead(distance_metric),
+                jump.plt_side_view(distance_metric),
+                jump.plt_speed(speed_metric, distance_metric),
+                jump.plt_map(),
+                jump.debug('Elevation', speed_metric, distance_metric),
+                jump.debug('Horizontal speed', speed_metric, distance_metric),
+                jump.debug('Vertical speed', speed_metric, distance_metric)]
+    return [empty] * 8
 
 
 @app.callback(
@@ -164,19 +212,21 @@ def plt_graphs(df, y_axis, speed_metric, distance_metric):
     ],
     [
         Input('storage', 'data'),
-        Input("overview", "hoverData")
+        Input("overview", "hoverData"),
+        Input('speed_metric', 'value')
     ]
 )
-def hover_overview(df, hover_data):
+def hover_overview(df, hover_data, speed_metric):
     if df is not None and hover_data is not None:
         jump = Jump(df[0], pd.read_json(df[1], orient="split"))
-        x = hover_data["points"][0]['x']
-        elevation = round(jump.landing_df["elevation"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
-        horz_speed = round(jump.landing_df["horz_speed_km/u"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
-        vert_speed = round(jump.landing_df["vert_speed_km/u"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
-        dive_angle = round(jump.landing_df["dive_angle"].loc[jump.landing_df['horz_distance_m'] == x].values[0], 2)
-        return [f'{elevation} feet', f'{horz_speed} km/u', f'{vert_speed} km/u', f'{dive_angle} °']
-    return ['---,-- feet', '---,-- km/u', '---,-- km/u', '---,-- °']
+        hover_id = hover_data["points"][0]['pointIndex']
+        metrics = helpers.get_metrics(jump.get_landing_df(), hover_id, speed_metric)
+
+        return [f"{ round(metrics['y_axis']['values'][0], 2) } { metrics['y_axis']['metric'][0] }",
+                f"{ round(metrics['y_axis']['values'][1], 2) } { metrics['y_axis']['metric'][1] }",
+                f"{ round(metrics['y_axis']['values'][2], 2) } { metrics['y_axis']['metric'][2] }",
+                f"{ round(metrics['y_axis']['values'][3], 2) } { metrics['y_axis']['metric'][3] }"]
+    return ['---,--'] * 4
 
 
 @app.callback(
@@ -200,7 +250,7 @@ def upload_file(contents, filename):
             return html.Div([
                 'There was an error processing this file.'
             ])
-    return [{'label': s, 'value': s} for s in swoops]
+    return [{'label': s, 'value': s} for s in swoops[::-1]]
 
 
 if __name__ == '__main__':

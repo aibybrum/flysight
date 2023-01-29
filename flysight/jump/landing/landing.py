@@ -1,9 +1,6 @@
 import os
 import peakutils as pu
-import matplotlib.pylab as pl
-import matplotlib.gridspec as gridspec
 import plotly.graph_objects as go
-import plotly.express as px
 from dotenv import load_dotenv
 from flysight.jump.exit.exit import Exit
 import flysight.jump.helpers as helpers
@@ -17,37 +14,12 @@ class Landing:
         self.df = df
         self.exit_df = Exit(df).get_exit_df()
         self.landing_df = self.exit_df.iloc[self.get_landing():].reset_index(drop=True)
-
-    def get_landing_df(self):
-        return self.landing_df
         
     def get_landing(self):
         elevation_lows = pu.indexes(-self.exit_df.elevation, thres=0.5, min_dist=1)
         # get last low point above 250 feet
         return [elevation_lows[i] for i in range(0, len(elevation_lows)) 
                 if self.exit_df.elevation[elevation_lows[i]] > 250][-1]
-
-    def get_layout_settings(self, metric):
-        return {
-            'Elevation': {'col': self.landing_df.elevation,
-                          'color': '#636EFA',
-                          'metric': "ft",
-                          'hovertemplate': 'Elevation: %{y:.2f} ft <extra></extra>'},
-            'Horizontal speed': {
-                'col': self.landing_df['horz_speed_km/u'] if metric == "km/u" else self.landing_df['horz_speed_mph'],
-                'color': '#FF0B0B',
-                'metric': metric,
-                'hovertemplate': 'Horz speed: %{y:.2f} ' + metric + '<extra></extra>'},
-            'Vertical speed': {
-                'col': self.landing_df['vert_speed_km/u'] if metric == "km/u" else self.landing_df['vert_speed_mph'],
-                'color': '#00CC96',
-                'metric': metric,
-                'hovertemplate': 'Vert speed: %{y:.2f} ' + metric + '<extra></extra>'},
-            'Dive angle': {'col': self.landing_df.dive_angle,
-                           'color': '#AB63FA',
-                           'metric': 'deg',
-                           'hovertemplate': 'Dive angle: %{y:.2f}° <extra></extra>'},
-        }
 
     def get_top_of_turn(self):
         return pu.indexes(self.landing_df.elevation, thres=0.01, min_dist=1)[0]
@@ -61,117 +33,19 @@ class Landing:
     def get_max_horz_speed(self):
         return self.landing_df.idxmax().horz_speed_mph
 
-    def plt_landing_point(self):
-        gs = gridspec.GridSpec(2, 2)
-        pl.figure(figsize=(15,10))
+    def get_landing_df(self):
+        return self.landing_df
 
-        ax = pl.subplot(gs[0, :])
-        elevation_peaks = pu.indexes(self.exit_df.elevation, thres=0.01, min_dist=1)
-        elevation_lows = pu.indexes(-self.exit_df.elevation, thres=0.5, min_dist=1)
+    def set_landing_df(self, df):
+        self.landing_df = df
 
-        pl.plot(self.exit_df.time, self.exit_df.elevation)
-        pl.axvline(x = self.exit_df.time[self.get_landing()], color='grey', linestyle ="--")
-        pl.plot(self.exit_df.time[elevation_peaks], self.exit_df.elevation[elevation_peaks], marker="8", color='g', ls="")
-        pl.plot(self.exit_df.time[elevation_lows], self.exit_df.elevation[elevation_lows], marker="8", color='r', ls="")  
-        pl.title("Landing - Elevation")
-        pl.xlabel("Time (s)")
-        pl.ylabel("Elevation (feet)")
-            
-        # Horizontal Speed
-        ax = pl.subplot(gs[1, 0]) # row 0, col 0
-        horz_speed_mph_peaks = pu.indexes(self.exit_df.horz_speed_mph, thres=0.5, min_dist=2)
-        horz_speed_mph_lows = pu.indexes(-self.exit_df.horz_speed_mph, thres=0.5, min_dist=2)
-
-        horz_lim_peaks = horz_speed_mph_peaks[-3:]
-        horz_lim_lows = [l for l in horz_speed_mph_lows if l > horz_lim_peaks[0] and l < horz_lim_peaks[-1]]
-
-        pl.plot(self.exit_df.time, self.exit_df.horz_speed_mph)
-        pl.plot(self.exit_df.time[horz_lim_peaks], self.exit_df.horz_speed_mph[horz_lim_peaks], marker="8", color='g', ls="")
-        pl.plot(self.exit_df.time[horz_lim_lows], self.exit_df.horz_speed_mph[horz_lim_lows], marker="8", color='r', ls="")
-        pl.axvline(x = self.exit_df.time[self.get_landing()], color='grey', linestyle ="--")
-        pl.title("Landing - Horizontal speed")
-        pl.xlabel("Time (s)")
-        pl.ylabel("Horizontal speed (mph)")
-
-        # Vertical Speed
-        ax = pl.subplot(gs[1, 1]) # row 0, col 1
-        vert_speed_mph_peaks = pu.indexes(self.exit_df.vert_speed_mph, thres=0.2, min_dist=2)
-        vert_speed_mph_lows = pu.indexes(-self.exit_df.vert_speed_mph, thres=0.5, min_dist=2)
-
-        vert_lim_peaks = vert_speed_mph_peaks[-3:]
-        vert_lim_lows = [l for l in vert_speed_mph_lows if l > vert_lim_peaks[0] and l < vert_lim_peaks[-1]]
-
-        pl.plot(self.exit_df.time, self.exit_df.vert_speed_mph)
-        pl.plot(self.exit_df.time[vert_lim_peaks], self.exit_df.vert_speed_mph[vert_lim_peaks], marker="8", color='g', ls="")
-        pl.plot(self.exit_df.time[vert_lim_lows], self.exit_df.vert_speed_mph[vert_lim_lows], marker="8", color='r', ls="")
-        pl.axvline(x = self.exit_df.time[self.get_landing()], color='grey', linestyle ="--")
-        pl.title("Landing - Vertical speed")
-        pl.xlabel("Time (s)")
-        pl.ylabel("Vertical speed (mph)")
-
-        pl.show()
-
-    def plt_speed(self):
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=self.landing_df['horz_distance_m'].iloc[self.get_max_horz_speed():self.get_stop() + 1],
-                                 y=self.landing_df['horz_speed_mph'].iloc[self.get_max_horz_speed():self.get_stop() + 1],
-                                 showlegend=False))
-        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_max_horz_speed()]],
-                                 y=[self.landing_df['horz_speed_mph'][self.get_max_horz_speed()]],
-                                 showlegend=False, text=["Max Horz Speed"], textposition="top right",
-                                 mode="markers+text"))
-        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_stop()]],
-                                 y=[self.landing_df['horz_speed_mph'][self.get_stop()]],
-                                 showlegend=False, text=["stop"], textposition="top left", mode="markers+text"))
-        return fig
-
-    def plt_side_view(self):
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=self.landing_df['horz_distance_m'].iloc[self.get_top_of_turn():self.get_stop() + 1],
-                                 y=self.landing_df['elevation'].iloc[self.get_top_of_turn():self.get_stop() + 1],
-                                 showlegend=False))
-        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_top_of_turn()]],
-                                 y=[self.landing_df['elevation'][self.get_top_of_turn()]],
-                                 showlegend=False, text=["Top of turn"], textposition="top right", mode="markers+text"))
-        fig.add_trace(go.Scatter(x=[self.landing_df['horz_distance_m'][self.get_stop()]],
-                                 y=[self.landing_df['elevation'][self.get_stop()]],
-                                 showlegend=False, text=["stop"], textposition="top left", mode="markers+text"))
-        return fig
-
-    def plt_map(self):
-        df = self.landing_df.iloc[self.get_top_of_turn():self.get_stop() + 1].reset_index(drop=True)
-        data = [go.Scattermapbox(
-            lat=df.lat,
-            lon=df.lon,
-            mode='lines',
-            marker=go.scattermapbox.Marker(
-                size=17,
-                color='rgb(255, 0, 0)',
-                opacity=0.7
-            ),
-            hoverinfo='none',
-        )]
-        layout = go.Layout(
-            autosize=True,
-            showlegend=False,
-            mapbox=dict(
-                accesstoken=token,
-                style="satellite-streets",
-                center=go.layout.mapbox.Center(
-                    lat=df.lat[round(len(df) / 2)],
-                    lon=df.lon[round(len(df) / 2)]
-                ),
-                pitch=0,
-                zoom=15
-            )
-        )
-        return go.Figure(data=data, layout=layout)
+    def save_landing(self, name):
+        self.landing_df.to_csv(f'././data/landing/{name}.csv', index=False)
 
     def plt_overview(self, selected, speed_metric, distance_metric):
         if len(selected) != 0:
-            dic = self.get_layout_settings(speed_metric)
-            landing_df = self.get_landing_df()
-            d_metric = landing_df['horz_distance_m'] if distance_metric == "m" else landing_df['horz_distance_ft']
+            x_axis = helpers.get_x_axis_settings(self.landing_df, distance_metric=distance_metric)
+            y_axis = helpers.get_y_axis_settings(self.landing_df, speed_metric=speed_metric)
 
             plotly_data = []
             layout_kwargs = {'xaxis': {'domain': [0.06 * (len(selected) - 1), 1],
@@ -180,20 +54,20 @@ class Landing:
             for i, s in enumerate(selected):
                 axis_name = 'yaxis' + str(i + 1) * (i > 0)
                 yaxis = 'y' + str(i + 1) * (i > 0)
-                plotly_data.append(go.Scatter(go.Scatter(
-                    x=d_metric,
-                    y=dic[s]['col'],
+                plotly_data.append(go.Scatter(
+                    x=x_axis['Horizontal Distance']['col'],
+                    y=y_axis[s]['col'],
                     name=s,
                     mode='lines',
-                    line=dict(color=dic[s]['color'], width=1.2),
+                    line=dict(color=y_axis[s]['color'], width=1.2),
                     showlegend=False,
-                    hovertemplate=dic[s]['hovertemplate'],
+                    hovertemplate=y_axis[s]['hovertemplate'],
                 ),
-                ))
+                )
                 layout_kwargs[axis_name] = {
-                    'position': i * 0.06, 'side': 'left', 'title': s + ' (' + dic[s]['metric'] + ')',
-                    'titlefont': {'size': 10, 'color': dic[s]['color']}, 'title_standoff': 0,
-                    'anchor': 'free', 'tickfont': {'size': 10, 'color': dic[s]['color']}, 'showgrid': False,
+                    'position': i * 0.06, 'side': 'left', 'title': s + ' (' + y_axis[s]['metric'] + ')',
+                    'titlefont': {'size': 10, 'color': y_axis[s]['color']}, 'title_standoff': 0,
+                    'anchor': 'free', 'tickfont': {'size': 10, 'color': y_axis[s]['color']}, 'showgrid': False,
                 }
 
                 plotly_data[i]['yaxis'] = yaxis
@@ -201,10 +75,178 @@ class Landing:
                     layout_kwargs[axis_name]['overlaying'] = 'y'
 
             fig = go.Figure(data=plotly_data, layout=go.Layout(**layout_kwargs))
-            fig.update_layout(hovermode="x unified")
+            fig.update_layout(
+                hovermode="x unified"
+            )
             return fig
         else:
             return helpers.empty_layout("Please select Y-axis")
 
-    def save_landing(self, name):
-        self.landing_df.to_csv(f'././data/landing/{name}.csv', index=False)
+    def plt_overhead(self, distance_metric):
+        x_axis = helpers.get_x_axis_settings(self.landing_df, distance_metric=distance_metric)
+        y_axis = helpers.get_y_axis_settings(self.landing_df, distance_metric=distance_metric)
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=x_axis['Distance']['col'],
+            y=y_axis['Distance']['col'],
+            line=dict(color=y_axis['Distance']['color'], width=1.2),
+            hovertemplate=y_axis['Distance']['hovertemplate'],
+            showlegend=False,
+            
+        ))
+        fig.update_layout(hovermode='x unified', title='Overhead view of flight path',
+                          legend=dict(yanchor="top", y=1, xanchor="right", x=1))
+        fig.update_xaxes(title=f"X-axis distance ({x_axis['Distance']['metric']})")
+        fig.update_yaxes(title=f"Y-axis distance ({y_axis['Distance']['metric']})")
+        return fig
+
+    def plt_side_view(self, distance_metric):
+        x_axis = helpers.get_x_axis_settings(self.landing_df, distance_metric=distance_metric)
+        y_axis = helpers.get_y_axis_settings(self.landing_df)
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=x_axis['Horizontal Distance']['col'].iloc[:self.get_stop()+1],
+            y=y_axis['Elevation']['col'].iloc[:self.get_stop()+1],
+            name='Elevation',
+            line=dict(color=y_axis['Elevation']['color'], width=1.2),
+            hovertemplate=y_axis['Elevation']['hovertemplate'],
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=[x_axis['Horizontal Distance']['col'][self.get_top_of_turn()]],
+            y=[y_axis['Elevation']['col'][self.get_top_of_turn()]],
+            name='Top of turn',
+            text=['Top of turn'],
+            textposition='top right',
+            hovertemplate='Top of turn: %{y:.2f}' + y_axis['Elevation']['metric'] + ' <extra></extra>',
+            mode='markers+text',
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=[x_axis['Horizontal Distance']['col'][self.get_stop()]],
+            y=[y_axis['Elevation']['col'][self.get_stop()]],
+            name='Stop',
+            text=['stop'],
+            textposition='top left',
+            hovertemplate='Stop: %{y:.2f}' + x_axis['Distance']['metric'] + ' <extra></extra>',
+            mode='markers+text',
+            showlegend=False
+        ))
+        fig.update_layout(hovermode='x unified', title='Side view of flight path',
+                          legend=dict(yanchor="top", y=1, xanchor="right", x=1))
+        fig.update_xaxes(title=f"Horizontal distance ({x_axis['Horizontal Distance']['metric']})")
+        fig.update_yaxes(title=f"Elevation ({y_axis['Elevation']['metric']})")
+
+        return fig
+
+    def plt_speed(self, speed_metric, distance_metric):
+        x_axis = helpers.get_x_axis_settings(self.landing_df, distance_metric=distance_metric)
+        y_axis = helpers.get_y_axis_settings(self.landing_df, speed_metric=speed_metric)
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=x_axis['Horizontal Distance']['col'].iloc[self.get_max_horz_speed():self.get_stop() + 1],
+            y=y_axis['Horizontal speed']['col'].iloc[self.get_max_horz_speed():self.get_stop() + 1],
+            line=dict(color=y_axis['Horizontal speed']['color'], width=1.2),
+            hovertemplate=y_axis['Horizontal speed']['hovertemplate'],
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=[x_axis['Horizontal Distance']['col'].iloc[self.get_max_horz_speed()]],
+            y=[y_axis['Horizontal speed']['col'][self.get_max_horz_speed()]],
+            name=f"max horz speed ({round(y_axis['Horizontal speed']['col'][self.get_max_horz_speed()], 2)} {y_axis['Horizontal speed']['metric']})",
+            text=["Max Horz Speed"],
+            textposition="top right",
+            hovertemplate='max horz speed: %{y:.2f}' + y_axis['Horizontal speed']['metric'] + ' <extra></extra>',
+            mode='markers+text'
+        ))
+        fig.add_trace(go.Scatter(
+            x=[x_axis['Horizontal Distance']['col'].iloc[self.get_stop()]],
+            y=[y_axis['Horizontal speed']['col'][self.get_stop()]],
+            text=['stop'],
+            textposition='top left',
+            hovertemplate='Stop: %{y:.2f}' + x_axis['Horizontal Distance']['metric'] + ' <extra></extra>',
+            mode='markers+text',
+            showlegend=False
+        ))
+
+        fig.update_layout(hovermode='x unified', title='Speed during swoop',
+                          legend=dict(yanchor="top", y=1, xanchor="right", x=1))
+        fig.update_xaxes(title=f"Horizontal distance ({x_axis['Horizontal Distance']['metric']})")
+        fig.update_yaxes(title=f"Horizontal speed ({y_axis['Horizontal speed']['metric']})")
+        return fig
+
+    def plt_map(self):
+        df = self.landing_df.iloc[:self.get_stop() + 1].reset_index(drop=True)
+        y_axis = helpers.get_y_axis_settings(df)
+
+        fig = go.Figure()
+
+        fig.add_trace(go.Scattermapbox(
+            lat=df.lat,
+            lon=df.lon,
+            mode='lines',
+            line=dict(color=y_axis['Elevation']['color']),
+            showlegend=False,
+        ))
+
+        fig.add_trace(go.Scattermapbox(
+            lat=[df.lat[self.get_top_of_turn()]],
+            lon=[df.lon[self.get_top_of_turn()]],
+            name='Top of turn',
+            textposition='top right',
+            mode='markers',
+        ))
+
+        fig.update_layout(
+            margin=dict(l=0, r=0, t=0, b=0),
+            legend=dict(yanchor="top", y=1, xanchor="right", x=1),
+            mapbox=dict(
+                accesstoken=token,
+                style="satellite-streets",
+                center=go.layout.mapbox.Center(
+                    lat=df.lat[round(len(df) / 2)],
+                    lon=df.lon[round(len(df) / 2)]
+                ),
+                pitch=0,
+                zoom=15.5
+            )
+        )
+        return fig
+
+    def debug(self, yaxis, speed_metric='km/u', distance_metric='m'):
+        x_axis = helpers.get_x_axis_settings(self.landing_df, distance_metric=distance_metric)
+        y_axis = helpers.get_y_axis_settings(self.landing_df, speed_metric=speed_metric)
+
+        vert_speed_peaks = pu.indexes(y_axis[yaxis]['col'], thres=0.5, min_dist=1)
+        vert_speed_lows = pu.indexes(-y_axis[yaxis]['col'], thres=0.5, min_dist=1)
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=x_axis['Distance']['col'],
+            y=y_axis[yaxis]['col'],
+            name=yaxis,
+            line=dict(color=y_axis[yaxis]['color'], width=1.2),
+            hovertemplate=y_axis[yaxis]['hovertemplate'],
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=x_axis['Distance']['col'][vert_speed_peaks],
+            y=y_axis[yaxis]['col'][vert_speed_peaks],
+            mode='markers',
+            marker=dict(color='Green', size=8),
+            showlegend=False
+        ))
+        fig.add_trace(go.Scatter(
+            x=x_axis['Distance']['col'][vert_speed_lows],
+            y=y_axis[yaxis]['col'][vert_speed_lows],
+            mode='markers',
+            marker=dict(color='Red', size=8),
+            showlegend=False
+        ))
+        fig.update_layout(hovermode="x unified", legend=dict(yanchor="top", y=1, xanchor="right", x=1))
+        fig.update_xaxes(title=f"Horizontal distance ({x_axis['Distance']['metric']})")
+        fig.update_yaxes(title=f"{yaxis} ({y_axis[yaxis]['metric']})")
+        return fig
