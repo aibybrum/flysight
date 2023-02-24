@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  frontend:
+    build: 
+      context: ./
+    ports:
+      - 5000:80
+    environment:
+      - TOKEN=${TOKEN}
+    volumes: 
+      - data:/data
+
+  postgres: 
+    image: 'postgres:13.1-alpine'
+    labels:
+      - traefik.enable=false 
+    environment: 
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+    ports:
+      - 5432:5432
+    volumes: 
+      - postgres:/var/lib/postgresql/data/
+
+volumes: 
+  data: 
+  postgres:

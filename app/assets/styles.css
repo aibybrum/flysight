@@ -1,0 +1,528 @@
+/**
+* Dashboard
+* @author Bram Langmans
+*/
+
+/* ==================
+General
+=====================*/
+
+html{
+	font-size: 0.625rem;
+}
+
+*{
+	margin:	0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing:	border-box;
+	box-sizing: border-box;
+}
+
+body{
+	font-family: 'Roboto', sans-serif;
+	color: #4F4F4F;
+}
+
+body > * {
+	font-size: 1.3rem;
+}
+
+/* ==================
+headers
+=====================*/
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+h2{
+	font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 0rem;
+}
+
+/* ==================
+Scroll bar
+=====================*/
+
+::-webkit-scrollbar {
+    width: 0.2rem;
+}
+  
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #CEDAE6;
+    border-radius: 1rem;
+}
+
+/* ==================
+Left side
+=====================*/
+
+.left {
+    height: 100%;
+    width: 6.7rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+}
+
+.logo {
+    margin: 1.6rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.swoop {
+    font-size: 2.6rem;
+    font-weight: bold;
+	color: #4F4F4F;
+    text-align: center;
+}
+
+.generator3000 {
+    font-size: 1rem;
+    font-weight: normal;
+    letter-spacing: 0.45rem;
+    margin-right: -0.45rem;
+	color: #057DE5;
+    margin-top: -1.3rem;
+    text-align: center;
+}
+
+.menu {
+    margin-top: 7.4rem;
+    width: 100%;
+}
+
+.frame {
+    height: 4rem;
+}
+
+.fa-th-large {
+    color: #4F4F4F;
+}
+
+
+/* ==================
+Right side
+=====================*/
+
+.right {
+    background-color: #F7F6FC;
+    margin-left: 6.7rem;
+	height: 100vh;
+    overflow-y: scroll;
+}
+
+.toolbar {
+    height: 6.6rem;
+    width: 100%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.toolbar #dashboard_title{
+    margin-left: 2.5rem;
+}
+
+.toolbar .searchbar{
+    margin-left: auto;
+    width: 38%;
+}
+
+.toolbar #searchbar{
+    height: 3.3rem;
+    background-color: #F7F6FC;
+    color: #4F4F4F;
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+    border: none;
+    padding-left: 1.5rem;
+}
+
+.toolbar .save {
+    margin-right: 2.5rem;
+    margin-left: 1rem;
+}
+
+.toolbar .save #save-val{
+    width: 13rem;
+    height: 3.3rem;
+    color: #4F4F4F;
+    background-color: #fff;
+    border: 0.1rem solid #4F4F4F;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+.toolbar .save #save-val:hover{
+    background-color: #057DE5;
+    border: 0.1rem solid #057DE5;
+    color: #fff
+}
+
+/* ==================
+Settings
+=====================*/
+
+.settings {
+    height: 14.4rem;
+	display: flex;
+    flex-wrap: wrap;
+    margin: 2rem 2rem 0 2rem;
+}
+
+.setting {
+    flex-grow: 4;
+    flex-basis: 20%;
+    border-radius: 0.5rem;
+}
+
+.setting:not(:last-child) {
+    margin-right: 2rem;
+}
+
+.setting .first_title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 2rem;
+    margin-left: 1.5rem;
+}
+
+.swoops {
+    background-color: #057DE5;
+}
+
+#swoops .Select-control {
+    background-color: #057DE5;
+}
+
+.dropdown {
+    margin-top: 2rem;
+    margin-left: 1.6rem;
+    margin-right: 1.6rem;
+}
+
+.dropdown .Select-control {
+    vertical-align: middle;
+    height: 3.3rem;
+    width: 100%;
+    border-width: 0.1rem;
+    border-radius: 0.5rem;
+    border-color: #fff;
+    font-size: 1.2rem;
+}
+
+.dropdown .Select-input {
+    height: 3rem;
+}
+
+.dropdown .Select-placeholder {
+    height: 3rem;
+    color: #fff;
+}
+
+.dropdown .Select-arrow {
+    border-color: #fff transparent transparent;
+    margin-right: 0.5rem;
+}
+
+.dropdown .Select-arrow:hover{
+    border-color: #fff transparent transparent;
+}
+
+.dropdown .Select-clear {
+    color: #fff;
+    border-color: #fff transparent transparent;
+    margin-right: 0.5rem;
+}
+
+.has-value.Select--single>.Select-control .Select-value .Select-value-label, .has-value.is-pseudo-focused.Select--single>.Select-control .Select-value .Select-value-label {
+    color: #fff;
+    border-width: 0.1rem;
+    border-radius: 0.5rem;
+    border-color: #fff;
+}
+
+.dropdown .Select-value {
+    color: #fff;
+}
+
+.upload {    
+    margin-top: 1rem;
+    height: 3.3rem;
+    margin-left: 1.6rem;
+    margin-right: 1.6rem;
+    border-width: 0.1rem;
+    border-style: dashed;
+    border-radius: 0.5rem;
+    border-color: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-data {   
+    color: #fff; 
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.upload-data a{
+    color: #fff;
+    font-weight: bold;
+}
+
+.ponds {
+    background-color: #38D996;
+}
+
+#ponds .Select-control  {
+    background-color: #38D996;
+}
+
+.units {
+    background-color: #FC6481;
+}
+
+#speed_metric.units_radio {
+    margin-top: 1rem;
+    
+}
+
+.units .units_radio {
+    margin-left: 1.6rem;
+    margin-right: 1.6rem;
+}
+
+.input_units_radio{
+    display: none;
+}
+
+.label_units_radio {
+    margin-top: 1rem;
+    width: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    background-color: #FC6481;
+    color: #fff;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0 0.5rem 0.5rem 0;
+    border-color: #fff;
+    text-align: center;
+    padding-top: 0.67rem;
+    padding-bottom: 0.67rem;
+}
+
+.label_units_radio:first-of-type {
+    border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.label_units_radio:has(>.input_units_radio:checked) {
+    background-color: #fff;
+    color: #FC6481;
+    border-width: 0.1rem;
+    border-color: #fff;
+}
+
+.startpoint {
+    background-color: #D36EC6;
+}
+
+#startpoint.startpoint_radio {
+    margin-top: 1rem;
+}
+
+.startpoint .startpoint_radio {
+    margin-left: 1.6rem;
+    margin-right: 1.6rem;
+}
+
+.input_startpoint_radio{
+    display: none;
+}
+
+.label_startpoint_radio {
+    display: inline-block;
+    padding: 0.67rem 1.1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-right: 1rem;
+    margin-top: 1rem;
+    background-color: #D36EC6;
+    color: #fff;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    border-color: #fff;
+}
+
+.label_startpoint_radio:has(>.input_startpoint_radio:checked) {
+    background-color: #fff;
+    color: #D36EC6;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    border-color: #fff;
+}
+
+
+
+/* ==================
+Graphs
+=====================*/
+
+.graphs {
+    margin: 0 2rem 0 2rem;
+    position: relative;
+}
+
+.graph {
+    margin-top: 2rem;
+}
+
+.graph_title {
+    height: 2.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 2.5rem;
+    margin-top: 3.5rem;
+    position: absolute;
+    z-index: 1;
+}
+
+.line {
+    width: 1.3rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+}
+
+.overview .line {
+    background-color: #057DE5;
+}
+
+.overhead .line {
+    background-color: #38D996;
+}
+
+.side_view_of_flight_path .line {
+    background-color: #FC6481;
+}
+
+.speed_during_swoop .line {
+    background-color: #D36EC6;
+}
+
+.graph_title h2 {
+    margin-left: 1rem;
+}
+
+.yaxis {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+    margin-top: 2.5rem;
+}
+
+.input_y_check{
+    display: none;
+}
+
+.label_y_check {
+    display: inline-block;
+    padding: 0.5rem 1.1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-right: 1rem;
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    background-color: #fff;
+}
+
+.label_y_check:last-child {
+    margin-right: 2.5rem;
+}
+
+.label_y_check:nth-child(1){
+    color: #057DE5;
+    border-color: #057DE5;
+}
+
+.label_y_check:nth-child(2){
+    color: #FC6481;
+    border-color: #FC6481;
+}
+
+.label_y_check:nth-child(3){
+    color: #38D996;
+    border-color: #38D996;
+}
+
+.label_y_check:nth-child(4){
+    color: #D36EC6;
+    border-color: #D36EC6;
+}
+
+.label_y_check:has(>.input_y_check:checked) {
+    border-width: 0.1rem;
+    border-style: solid;
+    border-radius: 0.5rem;
+    color: #fff;
+}
+
+.label_y_check:nth-child(1):has(>.input_y_check:checked) {
+    background-color: #057DE5;
+    border-color: #057DE5;
+}
+
+.label_y_check:nth-child(2):has(>.input_y_check:checked) {
+    background-color: #FC6481;
+    border-color: #FC6481;
+}
+
+.label_y_check:nth-child(3):has(>.input_y_check:checked) {
+    background-color: #38D996;
+    border-color: #38D996;
+}
+
+.label_y_check:nth-child(4):has(>.input_y_check:checked) {
+    background-color: #D36EC6;
+    border-color: #D36EC6;
+}
+
+/* ==================
+Footer
+=====================*/
+
+.footer {
+    margin-top: 2rem;
+    width: 100%;
+    background-color: #057DE5;
+}
+
+.footer_text {
+    padding: 1rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: #fff;
+}
