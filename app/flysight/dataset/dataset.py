@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+
 import flysight.dataset.helpers as helpers
 
 
@@ -86,3 +87,15 @@ class Dataset:
 
     def __str__(self):
         return f'{ self.get_name() }'
+    
+
+def main():
+    data = pd.read_csv('././data/raw/J1.csv', skiprows=[1])
+    dataset = Dataset("v1", data)
+
+    dataset.create()
+    print(f'dataset created: {dataset.get_name()}')
+
+
+if __name__ == "__main__":
+    main()
