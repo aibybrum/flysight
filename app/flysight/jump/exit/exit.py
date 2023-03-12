@@ -1,10 +1,13 @@
 import numpy as np
 import peakutils as pu
+
+from flysight.jump.exit import helpers
+
+
 # import matplotlib.pylab as pl
 # import matplotlib.pyplot as plt
 # import matplotlib.gridspec as gridspec
 
-import app.flysight.jump.exit.helpers as helpers
 
 
 class Exit:

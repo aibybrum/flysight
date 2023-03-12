@@ -18,6 +18,7 @@ themes = ["plotly_white", "plotly_dark", "ggplot2", "simple_white"]
 pio.templates.default = themes[0]
 
 path = "/data/"
+# path = "C:\\Users\\bram_\\Documents\\repos\\flysight\\data\\converted\\"
 
 server = flask.Flask(__name__)
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME], server=server)
@@ -57,6 +58,7 @@ app.layout = html.Div(className="center", children=[
                         html.A('browse'),
                     ]),
                 ])),
+                dcc.Store(id='store', data=swoops),
                 dcc.Store(id='storage')
             ]),
             html.Div(className="setting ponds", children=[
@@ -141,6 +143,7 @@ app.layout = html.Div(className="center", children=[
     ]),
 ])
 
+
 @app.callback(
     [
         Output('dashboard_title', 'children'),
@@ -186,10 +189,25 @@ def plt_graphs(df, y_axis, speed_metric, distance_metric, startpoint):
 
 
 @app.callback(
+
     Output('swoops', 'options'),
+    Input('store', 'data'),
+)
+def update_options(data):
+    print(f'Data: {data}')
+    if data is not None:
+        return [{'label': s, 'value': s} for s in data[::-1]]
+
+
+@app.callback(
+    Output("store", "data"),
     Input('upload_swoops', 'contents'),
-    State('upload_swoops', 'filename'))
-def upload_file(contents, filename):
+    [
+        State('upload_swoops', 'filename'),
+        State("store", "data"),
+    ]
+)
+def upload_file(contents, filename, data):
     if contents is not None:
         content_type, content_string = contents.split(',')
         decoded = base64.b64decode(content_string)
@@ -206,7 +224,7 @@ def upload_file(contents, filename):
             return html.Div([
                 'There was an error processing this file.'
             ])
-    return [{'label': s, 'value': s} for s in swoops[::-1]]
+    return swoops
 
 
 if __name__ == '__main__':

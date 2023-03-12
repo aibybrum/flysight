@@ -1,9 +1,12 @@
 import os
 import numpy as np
 import pandas as pd
-#from influxdb import InfluxDBClient, DataFrameClient
+import influxdb_client
+from influxdb_client.client.write_api import SYNCHRONOUS
+import app.flysight.dataset.helpers as helpers
+from dotenv import load_dotenv
 
-from flysight.dataset import helpers
+load_dotenv()
 
 
 class Dataset:
@@ -65,7 +68,7 @@ class Dataset:
     def create(self):
         df = pd.DataFrame({
             'timestamp': pd.to_datetime(self.df.time),
-            'time': np.array(self.get_total_seconds()),
+            'time_sec': np.array(self.get_total_seconds()),
             'lat': self.df.lat,
             'lon': self.df.lon,
             'elevation': self.get_fixed_elevation(0),
@@ -96,29 +99,39 @@ class Dataset:
         return f'{self.get_name()}'
 
 
-# def main():
-#     raw = pd.read_csv("C:\\Users\\bram_\\Documents\\repos\\flysight\\data\\raw\\J1.CSV", skiprows=[1])
-#     dataset = Dataset("v1", raw).create()
-#
-#     # Use only following fields from CSV.
-#     fields = ['timestamp', 'time', 'lat', 'lon', 'elevation', 'horz_distance_ft', 'horz_distance_m',
-#               'x_axis_distance_ft', 'x_axis_distance_m', 'y_axis_distance_ft', 'y_axis_distance_m',
-#               'vert_speed_mph', 'horz_speed_mph', 'vert_speed_km/u', 'horz_speed_km/u', 'heading', 'dive_angle']
-#     # Define tag fields
-#     datatags = ['user']
-#     # Define fixed tags
-#     # fixtags = {"Country": "India", "State": "Haryana", "City": "Kurukshetra"}
-#
-#     dbhost = 'localhost'
-#     dbport = 8086
-#     dbuser = 'admin'
-#     dbpasswd = 'admin'
-#     dbname = 'influx'
-#     protocol = 'line'
-#
-#     client = DataFrameClient(dbhost, dbport, dbuser, dbpasswd, dbname)
-#     client.write_points(dataset, "J1", tag_columns=datatags, protocol=protocol)
+def main():
+    raw = pd.read_csv("C:\\Users\\bram_\\Documents\\repos\\flysight\\data\\raw\\J1.CSV", skiprows=[1])
+    dataset = Dataset("v1", raw).create()
+    dataset.drop(columns=['user'])
+
+    url = "http://localhost:8086/"
+    token = os.getenv('INFLUXDB_TOKEN')
+    bucket = os.getenv('INFLUXDB_BUCKET')
+    org = os.getenv('INFLUXDB_ORG')
+
+    client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
+
+    query = '''
+    from(bucket: "flysight")
+    |> range(start: 2022-06-22T11:45:46.80Z)
+    |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
+    |> filter(fn: (r) => r._measurement == "1")'''
+
+    jump = client.query_api().query_data_frame(org=org, query=query)
+    print(jump)
+
+    # write_api = client.write_api(write_options=SYNCHRONOUS)
+    # write_api.write(
+    #     bucket=bucket,
+    #     org=org,
+    #     record=dataset,
+    #     data_frame_measurement_name='2',
+    #     data_frame_tag_columns=['user']
+    # )
+    #
+    # write_api.__del__()
+    client.__del__()
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()

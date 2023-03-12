@@ -1,6 +1,8 @@
-from app.flysight.jump.landing.landing import Landing
-from app.flysight.jump.exit.exit import Exit
+#from app.flysight.jump.landing.landing import Landing
+#from app.flysight.jump.exit.exit import Exit
 import pandas as pd
+from flysight.jump.exit.exit import Exit
+from flysight.jump.landing.landing import Landing
 
 
 class Jump(Landing, Exit):

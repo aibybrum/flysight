@@ -3,8 +3,8 @@ import peakutils as pu
 import plotly.graph_objects as go
 from dotenv import load_dotenv
 
-from app.flysight.jump.exit.exit import Exit
-import app.flysight.jump.helpers as helpers
+from flysight.jump import helpers
+from flysight.jump.exit.exit import Exit
 
 load_dotenv()
 token = os.getenv("TOKEN")
