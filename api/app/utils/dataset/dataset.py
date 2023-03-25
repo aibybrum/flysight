@@ -1,18 +1,14 @@
 import os
 import numpy as np
 import pandas as pd
-import influxdb_client
-from influxdb_client.client.write_api import SYNCHRONOUS
-import app.flysight.dataset.helpers as helpers
-from dotenv import load_dotenv
-
-load_dotenv()
+import api.app.services.dataset.helpers as helpers
 
 
 class Dataset:
-    def __init__(self, filename, df):
+    def __init__(self, filename, df, user_id=None):
         self.filename = filename
         self.df = df
+        self.user_id = user_id
 
     def get_total_seconds(self):
         datetimes = [pd.to_datetime(d) for d in self.df.time]
@@ -84,7 +80,8 @@ class Dataset:
             'horz_speed_km/u': self.get_horizontal_speed('km/u'),
             'heading': self.df.heading,
             'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph')),
-            'user': 0})
+            'name': self.get_name(),
+            'user_id': self.user_id})
         df.set_index('timestamp', inplace=True)
         return df
 
@@ -97,41 +94,3 @@ class Dataset:
 
     def __str__(self):
         return f'{self.get_name()}'
-
-
-def main():
-    raw = pd.read_csv("C:\\Users\\bram_\\Documents\\repos\\flysight\\data\\raw\\J1.CSV", skiprows=[1])
-    dataset = Dataset("v1", raw).create()
-    dataset.drop(columns=['user'])
-
-    url = "http://localhost:8086/"
-    token = os.getenv('INFLUXDB_TOKEN')
-    bucket = os.getenv('INFLUXDB_BUCKET')
-    org = os.getenv('INFLUXDB_ORG')
-
-    client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
-
-    query = '''
-    from(bucket: "flysight")
-    |> range(start: 2022-06-22T11:45:46.80Z)
-    |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
-    |> filter(fn: (r) => r._measurement == "1")'''
-
-    jump = client.query_api().query_data_frame(org=org, query=query)
-    print(jump)
-
-    # write_api = client.write_api(write_options=SYNCHRONOUS)
-    # write_api.write(
-    #     bucket=bucket,
-    #     org=org,
-    #     record=dataset,
-    #     data_frame_measurement_name='2',
-    #     data_frame_tag_columns=['user']
-    # )
-    #
-    # write_api.__del__()
-    client.__del__()
-
-
-if __name__ == "__main__":
-    main()
