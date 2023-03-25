@@ -4,10 +4,8 @@ import pandas as pd
 from fastapi import UploadFile
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-from api.app.services.dataset.dataset import Dataset
+from api.app.utils.dataset.dataset import Dataset
 from api.app.schemas.jump import Jump, JumpCreate
-from api.app.services.jump.exit.exit import ExitService
-from api.app.services.jump.landing.landing import LandingService
 from api.app.services.main import InfluxdbService
 
 from datetime import datetime
@@ -64,17 +62,6 @@ class JumpCRUD(InfluxdbService):
         stop = get_date_helper().to_utc(datetime(2200, 1, 1, 0, 0, 0, 0))
         self.client.delete_api().delete(start, stop, f'_measurement="{jump_id}"', bucket=f'{self.bucket}')
 
-    def get_df(self, jump_id: UUID):
-        query = f'from(bucket: "{self.bucket}") |> range(start: 0) ' \
-                f'|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
-                f'|> filter(fn: (r) => r._measurement == "{jump_id}")'
-        df = self.client.query_api().query_data_frame(query=query)
-        if not df.empty:
-            return df
-        return None
 
-
-class JumpService(JumpCRUD, LandingService, ExitService):
-    def __init__(self):
-        self.df = df
-        super().__init__(self.df)
+class JumpService(JumpCRUD):
+    pass

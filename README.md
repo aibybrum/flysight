@@ -32,3 +32,26 @@ def get_dynamic_elevation():
     for i in range(0, len(dataset.hMSL)):
         l.append(meters_to_feet(dataset.hMSL[i]) - ground_elevation - earth_elevation[i])
     return l
+
+---
+
+@app.get("/measurements/{tag_key}/{tag_value}")
+async def get_measurements(tag_key: str, tag_value: str):
+    query_api = client.query_api()
+    query = f'from(bucket:"your-bucket") |> range(start: -1h) |> filter(fn: (r) => r._field == "{tag_key}" and r._value == "{tag_value}") |> group(columns: ["_measurement"])'
+    result = query_api.query(query)
+    measurements = [m["_value"] for m in result[0].records]
+    return {"measurements": measurements}
+
+@app.put("/data/{measurement}")
+async def update_data(measurement: str, value: float):
+    write_api = client.write_api()
+    point = Point(measurement).field("value", value).time(datetime.utcnow())
+    write_api.write(bucket="your-bucket", record=point)
+    return {"message": "Data updated successfully"}
+
+
+
+how to send a dataframe in response by using fastapi schema
+
+can you give me a fastapi response schema for dataframe with to_json

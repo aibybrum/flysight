@@ -1,6 +1,4 @@
 import numpy as np
-import plotly.graph_objects as go
-
 
 '''
 Set starting point of dataframe

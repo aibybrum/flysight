@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from uuid import UUID
 
 
 class UserBase(BaseModel):
@@ -9,8 +10,12 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserUpdate(UserBase):
+    password: str
+
+
 class User(UserBase):
-    id: str
+    id: UUID
 
     class Config:
         orm_mode = True

@@ -1,17 +1,19 @@
 import numpy as np
 import peakutils as pu
 
-from api.app.services.jump.exit import helpers
+from api.app.utils.jump.exit import helpers
 
 
-class ExitService:
+class Exit:
     def __init__(self, df):
         self.df = df
         self.exit_df = self.df.iloc[self.get_exit():].reset_index(drop=True)
+        # self.exit_df = helpers.set_start_point(self.df, self.get_exit()).iloc[self.get_exit():].reset_index()
 
     def get_exit_df(self):
         return self.exit_df
 
+    # Get exit point
     def get_skydive_elevation(self):
         peaks = pu.indexes(self.df.elevation, thres=0.9, min_dist=1)
         # offset because the exit point can be to late to measure horz, vert speed
@@ -37,5 +39,5 @@ class ExitService:
 
     def get_exit(self):
         jmp_df = self.get_skydive_elevation()['plane_on_altitude']
-        mean = np.mean([jmp_df.time[self.get_skydive_vert_speed()['exit']], jmp_df.time[self.get_skydive_horz_speed()['exit']]])
-        return self.df.index[self.df['time'] == helpers.closest_value(self.df.time, mean)][0]
+        mean = np.mean([jmp_df.time_sec[self.get_skydive_vert_speed()['exit']], jmp_df.time_sec[self.get_skydive_horz_speed()['exit']]])
+        return self.df.index[self.df['time_sec'] == helpers.closest_value(self.df.time_sec, mean)][0]
