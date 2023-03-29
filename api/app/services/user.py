@@ -1,8 +1,9 @@
 import bcrypt
 from uuid import UUID, uuid4
-from api.app.schemas.user import UserCreate, UserUpdate
-from api.app.models.user import User
-from api.app.services.main import PostgresService
+
+from app.schemas.user import UserCreate, UserUpdate
+from app.models.user import User
+from app.services.main import PostgresService
 
 
 class UserCRUD(PostgresService):

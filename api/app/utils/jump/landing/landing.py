@@ -1,7 +1,6 @@
 import peakutils as pu
 
-from api.app.utils.jump import helpers
-from api.app.utils.jump.exit.exit import Exit
+from app.utils.jump.exit.exit import Exit
 
 
 class Landing:
@@ -29,9 +28,3 @@ class Landing:
 
     def get_max_horz_speed(self):
         return self.landing_df.idxmax().horz_speed_mph
-
-    def set_startpoint(self, startpoint):
-        if startpoint == 'Start':
-            self.landing_df = helpers.set_start_point(self.landing_df, 0)
-        elif startpoint == 'Top of turn':
-            self.landing_df = helpers.set_start_point(self.landing_df, self.get_top_of_turn())

@@ -3,9 +3,9 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from api.app.services.user import UserService
-from api.app.schemas.user import User, UserCreate, UserUpdate
-from api.app.config.postgres import get_db
+from app.services.user import UserService
+from app.schemas.user import User, UserCreate, UserUpdate
+from app.config.postgres import get_db
 
 router = APIRouter(
     prefix="/users",

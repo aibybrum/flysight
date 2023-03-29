@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import api.app.config.influxdb as influxdb
+import app.config.influxdb as influxdb
 
 
 class DBSessionContext(object):

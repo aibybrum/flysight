@@ -1,5 +1,5 @@
-from api.app.utils.jump.exit.exit import Exit
-from api.app.utils.jump.landing.landing import Landing
+from app.utils.jump.exit.exit import Exit
+from app.utils.jump.landing.landing import Landing
 
 
 class Jump(Landing, Exit):

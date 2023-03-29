@@ -1,6 +1,8 @@
+import uvicorn
 from fastapi import FastAPI
-from .routers import user, jump, landing
-from .config.postgres import create_tables
+
+from app.config.postgres import create_tables
+from app.routers import user, jump, landing
 
 create_tables()
 

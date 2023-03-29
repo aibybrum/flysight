@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from uuid import UUID
-from api.app.config.influxdb import client, bucket
-from api.app.schemas.landing import Landing
-from api.app.services.landing import LandingService
+from app.config.influxdb import client, bucket, org
+from app.schemas.landing import Landing
+from app.services.landing import LandingService
 
 router = APIRouter(
     prefix="/landings",

@@ -1,7 +1,7 @@
 import numpy as np
 import peakutils as pu
 
-from api.app.utils.jump.exit import helpers
+from app.utils.jump.exit import helpers
 
 
 class Exit:

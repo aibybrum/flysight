@@ -3,9 +3,9 @@ from typing import List
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from uuid import UUID
 
-from api.app.services.jump import JumpService
-from api.app.schemas.jump import Jump, JumpCreate
-from api.app.config.influxdb import client, bucket
+from app.services.jump import JumpService
+from app.schemas.jump import Jump, JumpCreate
+from app.config.influxdb import client, bucket, org
 
 router = APIRouter(
     prefix="/jumps",

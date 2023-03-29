@@ -1,7 +1,7 @@
 from uuid import UUID
-from api.app.services.main import InfluxdbService
-from api.app.utils.jump.jump import Jump
-from api.app.schemas.landing import Landing, Data, LandingParams, Location, Distance, Speed
+from app.services.main import InfluxdbService
+from app.utils.jump.jump import Jump
+from app.schemas.landing import Landing, Data, LandingParams, Location, Distance, Speed
 
 
 class LandingCRUD(InfluxdbService):

@@ -4,9 +4,9 @@ import pandas as pd
 from fastapi import UploadFile
 from influxdb_client.client.write_api import SYNCHRONOUS
 
-from api.app.utils.dataset.dataset import Dataset
-from api.app.schemas.jump import Jump, JumpCreate
-from api.app.services.main import InfluxdbService
+from app.utils.dataset.dataset import Dataset
+from app.schemas.jump import Jump, JumpCreate
+from app.services.main import InfluxdbService
 
 from datetime import datetime
 from influxdb_client.client.util.date_utils import get_date_helper

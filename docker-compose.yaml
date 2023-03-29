@@ -2,21 +2,36 @@ version: '3.9'
 services:
   frontend:
     build: 
-      context: ./
+      context: ./app
+      dockerfile: Dockerfile
     ports:
-      - '5000:80'
-    environment:
-      - TOKEN=${TOKEN}
+      - '80:80'
+    env_file:
+      - env/frontend.env
     volumes: 
       - data:/data
+
+  api:
+    image: swoop-api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - '5000:80'
+    depends_on:
+      - postgres
+      - influxdb
+    env_file:
+      - env/influxdb.env
+      - env/postgres.env
+
 
   postgres:
     image: postgres
     restart: always
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - env/postgres.env
     ports:
       - '5432:5432'
     volumes:
@@ -25,11 +40,8 @@ services:
   influxdb: 
     image: influxdb
     restart: always
-    environment: 
-      - INFLUXDB_BUCKET=${INFLUXDB_BUCKET}
-      - INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER}
-      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
-      - INFLUXDB_ORG=${INFLUXDB_ORG}
+    env_file:
+      - env/influxdb.env
     ports:
       - '8086:8086'
     volumes: 
