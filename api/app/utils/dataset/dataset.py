@@ -1,15 +1,14 @@
 import os
 import numpy as np
 import pandas as pd
-#from influxdb import InfluxDBClient, DataFrameClient
-
-from flysight.dataset import helpers
+import app.utils.dataset.helpers as helpers
 
 
 class Dataset:
-    def __init__(self, filename, df):
+    def __init__(self, filename, df, user_id=None):
         self.filename = filename
         self.df = df
+        self.user_id = user_id
 
     def get_total_seconds(self):
         datetimes = [pd.to_datetime(d) for d in self.df.time]
@@ -65,7 +64,7 @@ class Dataset:
     def create(self):
         df = pd.DataFrame({
             'timestamp': pd.to_datetime(self.df.time),
-            'time': np.array(self.get_total_seconds()),
+            'time_sec': np.array(self.get_total_seconds()),
             'lat': self.df.lat,
             'lon': self.df.lon,
             'elevation': self.get_fixed_elevation(0),
@@ -81,7 +80,8 @@ class Dataset:
             'horz_speed_km/u': self.get_horizontal_speed('km/u'),
             'heading': self.df.heading,
             'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph')),
-            'user': 0})
+            'name': self.get_name(),
+            'user_id': self.user_id})
         df.set_index('timestamp', inplace=True)
         return df
 
@@ -94,31 +94,3 @@ class Dataset:
 
     def __str__(self):
         return f'{self.get_name()}'
-
-
-# def main():
-#     raw = pd.read_csv("C:\\Users\\bram_\\Documents\\repos\\flysight\\data\\raw\\J1.CSV", skiprows=[1])
-#     dataset = Dataset("v1", raw).create()
-#
-#     # Use only following fields from CSV.
-#     fields = ['timestamp', 'time', 'lat', 'lon', 'elevation', 'horz_distance_ft', 'horz_distance_m',
-#               'x_axis_distance_ft', 'x_axis_distance_m', 'y_axis_distance_ft', 'y_axis_distance_m',
-#               'vert_speed_mph', 'horz_speed_mph', 'vert_speed_km/u', 'horz_speed_km/u', 'heading', 'dive_angle']
-#     # Define tag fields
-#     datatags = ['user']
-#     # Define fixed tags
-#     # fixtags = {"Country": "India", "State": "Haryana", "City": "Kurukshetra"}
-#
-#     dbhost = 'localhost'
-#     dbport = 8086
-#     dbuser = 'admin'
-#     dbpasswd = 'admin'
-#     dbname = 'influx'
-#     protocol = 'line'
-#
-#     client = DataFrameClient(dbhost, dbport, dbuser, dbpasswd, dbname)
-#     client.write_points(dataset, "J1", tag_columns=datatags, protocol=protocol)
-
-
-# if __name__ == "__main__":
-#     main()

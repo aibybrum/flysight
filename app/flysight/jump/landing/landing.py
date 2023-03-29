@@ -2,8 +2,9 @@ import os
 import peakutils as pu
 import plotly.graph_objects as go
 from dotenv import load_dotenv
+
+from flysight.jump import helpers
 from flysight.jump.exit.exit import Exit
-import flysight.jump.helpers as helpers
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -14,11 +15,11 @@ class Landing:
         self.df = df
         self.exit_df = Exit(df).get_exit_df()
         self.landing_df = self.exit_df.iloc[self.get_landing():].reset_index(drop=True)
-        
+
     def get_landing(self):
         elevation_lows = pu.indexes(-self.exit_df.elevation, thres=0.5, min_dist=1)
         # get last low point above 250 feet
-        return [elevation_lows[i] for i in range(0, len(elevation_lows)) 
+        return [elevation_lows[i] for i in range(0, len(elevation_lows))
                 if self.exit_df.elevation[elevation_lows[i]] > 250][-1]
 
     def get_top_of_turn(self):
@@ -28,11 +29,12 @@ class Landing:
         offset = 1.5
         horz_speed_peaks = pu.indexes(self.landing_df.horz_speed_mph, thres=0.1, min_dist=1)
         horz_speed_lows = pu.indexes(-self.landing_df.horz_speed_mph, thres=0.5, min_dist=1)
-        return [l for l in horz_speed_lows if l > horz_speed_peaks[-1] and self.landing_df.horz_speed_mph[l] < offset][0]
+        return [l for l in horz_speed_lows if l > horz_speed_peaks[-1] and self.landing_df.horz_speed_mph[l] < offset][
+            0]
 
     def get_max_horz_speed(self):
         return self.landing_df.idxmax().horz_speed_mph
-    
+
     def set_startpoint(self, startpoint):
         if startpoint == 'Start':
             self.landing_df = helpers.set_start_point(self.landing_df, 0)
@@ -96,7 +98,7 @@ class Landing:
             line=dict(color=y_axis['Distance']['color'], width=1.2),
             hovertemplate=y_axis['Distance']['hovertemplate'],
             showlegend=False,
-            
+
         ))
         fig.update_layout(hovermode='x unified',
                           legend=dict(yanchor="top", y=1, xanchor="right", x=1))
@@ -110,8 +112,8 @@ class Landing:
 
         fig = go.Figure()
         fig.add_trace(go.Scatter(
-            x=x_axis['Horizontal Distance']['col'].iloc[:self.get_stop()+1],
-            y=y_axis['Elevation']['col'].iloc[:self.get_stop()+1],
+            x=x_axis['Horizontal Distance']['col'].iloc[:self.get_stop() + 1],
+            y=y_axis['Elevation']['col'].iloc[:self.get_stop() + 1],
             name='Elevation',
             line=dict(color=y_axis['Elevation']['color'], width=1.2),
             hovertemplate=y_axis['Elevation']['hovertemplate'],
