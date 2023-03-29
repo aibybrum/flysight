@@ -1,8 +1,7 @@
-import json
-from uuid import UUID, uuid4
+from uuid import UUID
 from api.app.services.main import InfluxdbService
 from api.app.utils.jump.jump import Jump
-from api.app.schemas.landing import Landing, Data
+from api.app.schemas.landing import Landing, Data, LandingParams, Location, Distance, Speed
 
 
 class LandingCRUD(InfluxdbService):
@@ -12,32 +11,45 @@ class LandingCRUD(InfluxdbService):
                 f'|> filter(fn: (r) => r._measurement == "{jump_id}")'
         df = self.client.query_api().query_data_frame(query=query)
         if not df.empty:
-            jump_df = df.drop(['result', 'table', '_start', '_stop', '_time', '_measurement', 'name', 'user_id'], axis=1)
-            return df, jump_df
+            jump = Jump(df.drop(['result', 'table', '_start', '_stop', '_time', '_measurement', 'name', 'user_id'], axis=1))
+            return df['name'][0], jump
         return None
 
 
 class LandingService(LandingCRUD):
     def get_landing(self, jump_id: UUID):
-        df, jump_df = self.get_df(jump_id)
-
-        if df.empty and jump_df.empty:
+        name, jump = self.get_df(jump_id)
+        landing_df = jump.get_landing_df()
+        if landing_df.empty:
             return None
 
-        jump = Jump(jump_df)
-
-        json_str = jump.get_landing_df().to_json(orient="records")
-        data = json.loads(json_str)
-
         return Landing(
-            id=df['_measurement'][0],
-            name=df['name'][0],
-            user_id=df['user_id'][0],
+            name=name,
             data=Data(
-                top_of_turn=jump.get_top_of_turn(),
-                max_horz_speed=jump.get_max_horz_speed(),
-                stop=jump.get_stop(),
-                dataframe=data
-            )
+                params=LandingParams(
+                    top_of_turn=jump.get_top_of_turn(),
+                    max_horz_speed=jump.get_max_horz_speed(),
+                    stop=jump.get_max_horz_speed(),
+                ),
+                time=landing_df['time_sec'].values.tolist(),
+                location=Location(lat=landing_df['lat'].values.tolist(), lon=landing_df['lon'].values.tolist()),
+                elevation=landing_df['elevation'].values.tolist(),
+                distance=Distance(
+                    horizontal={'ft': landing_df['horz_distance_ft'].values.tolist(),
+                                'm': landing_df['horz_distance_m'].values.tolist()},
+                    x_axis={'ft': landing_df['x_axis_distance_ft'].values.tolist(),
+                            'm': landing_df['x_axis_distance_m'].values.tolist()},
+                    y_axis={'ft': landing_df['y_axis_distance_ft'].values.tolist(),
+                            'm': landing_df['y_axis_distance_m'].values.tolist()}
+                ),
+                speed=Speed(
+                    horizontal={'km/u': landing_df['horz_speed_km/u'].values.tolist(),
+                                'mph': landing_df['horz_speed_mph'].values.tolist()},
+                    vertical={'km/u': landing_df['vert_speed_km/u'].values.tolist(),
+                              'mph': landing_df['vert_speed_mph'].values.tolist()}
+                ),
+                dive_angle=landing_df['dive_angle'].values.tolist(),
+                heading=landing_df['heading'].values.tolist(),
+            ),
         )
 

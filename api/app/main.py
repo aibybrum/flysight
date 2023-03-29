@@ -1,10 +1,6 @@
-import uvicorn
 from fastapi import FastAPI
-
-from api.app.routers import user, jump, landing
-from api.app.config.postgres import create_tables
-import sys
-sys.setrecursionlimit(15000)
+from .routers import user, jump, landing
+from .config.postgres import create_tables
 
 create_tables()
 
@@ -20,5 +16,5 @@ async def root():
     return {"message": "SW00P GENERATOR3000"}
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, port=8082)
+# if __name__ == "__main__":
+#     uvicorn.run(app, port=8082)
