@@ -26,7 +26,6 @@ services:
       - env/influxdb.env
       - env/postgres.env
 
-
   postgres:
     image: postgres
     restart: always
