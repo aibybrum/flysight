@@ -1,15 +1,15 @@
 version: '3.9'
 services:
-  frontend:
-    build: 
-      context: ./app
-      dockerfile: Dockerfile
-    ports:
-      - '80:80'
-    env_file:
-      - env/frontend.env
-    volumes: 
-      - data:/data
+  # frontend:
+  #   build: 
+  #     context: ./app
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - '80:80'
+  #   env_file:
+  #     - env/frontend.env
+  #   volumes: 
+  #     - data:/data
 
   api:
     image: swoop-api

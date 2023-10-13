@@ -18,7 +18,7 @@ router = APIRouter(
 async def get_jumps_by_user(user_id: UUID):
     db_jumps = JumpService(bucket, client).get_jumps_by_user(user_id)
     if db_jumps is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404)
     return db_jumps
 
 

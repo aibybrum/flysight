@@ -18,14 +18,7 @@ class Distance(BaseModel):
     y_axis: Dict[str, List[float]]
 
 
-class LandingParams(BaseModel):
-    top_of_turn: int
-    max_horz_speed: int
-    stop: int
-
-
 class Data(BaseModel):
-    params: LandingParams
     time: List[float]
     location: Location
     elevation: List[float]
@@ -35,6 +28,14 @@ class Data(BaseModel):
     heading: List[float]
 
 
+class Features(BaseModel):
+    max_horz_speed: int
+    max_vert_speed: int
+    stop: int
+    rollout: int
+
+
 class Landing(BaseModel):
     name: str
+    features: Features
     data: Data

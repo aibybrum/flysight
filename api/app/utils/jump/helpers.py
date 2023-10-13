@@ -29,7 +29,7 @@ def shift_df(dataframe, key, col):
 
 def set_start_point(df, key):
     df2 = df.copy()
-    df2['time'] = shift_df(df2, key, 'time')
+    df2['time_sec'] = shift_df(df2, key, 'time_sec')
     df2['horz_distance_m'] = shift_df(df2, key, 'horz_distance_m')
     df2['horz_distance_ft'] = shift_df(df2, key, 'horz_distance_ft')
     df2['x_axis_distance_m'] = shift_df(df2, key, 'x_axis_distance_m')

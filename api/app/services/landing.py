@@ -1,7 +1,7 @@
 from uuid import UUID
 from app.services.main import InfluxdbService
 from app.utils.jump.jump import Jump
-from app.schemas.landing import Landing, Data, LandingParams, Location, Distance, Speed
+from app.schemas.landing import Landing, Features, Data, Location, Distance, Speed
 
 
 class LandingCRUD(InfluxdbService):
@@ -18,19 +18,20 @@ class LandingCRUD(InfluxdbService):
 
 class LandingService(LandingCRUD):
     def get_landing(self, jump_id: UUID):
-        name, jump = self.get_df(jump_id)
-        landing_df = jump.get_landing_df()
+        name, landing = self.get_df(jump_id)
+        landing_df = landing.get_landing_df()
         if landing_df.empty:
             return None
 
         return Landing(
             name=name,
+            features=Features(
+                max_horz_speed=landing.get_max_horz_speed_id(),
+                max_vert_speed=landing.get_max_vert_speed_id(),
+                stop=landing.get_stop_estimate(),
+                rollout=landing.get_stop_estimate()
+            ),
             data=Data(
-                params=LandingParams(
-                    top_of_turn=jump.get_top_of_turn(),
-                    max_horz_speed=jump.get_max_horz_speed(),
-                    stop=jump.get_max_horz_speed(),
-                ),
                 time=landing_df['time_sec'].values.tolist(),
                 location=Location(lat=landing_df['lat'].values.tolist(), lon=landing_df['lon'].values.tolist()),
                 elevation=landing_df['elevation'].values.tolist(),
