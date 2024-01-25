@@ -1,16 +1,5 @@
 version: '3.9'
 services:
-  # frontend:
-  #   build: 
-  #     context: ./app
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - '80:80'
-  #   env_file:
-  #     - env/frontend.env
-  #   volumes: 
-  #     - data:/data
-
   api:
     image: swoop-api
     build:
@@ -23,14 +12,13 @@ services:
       - postgres
       - influxdb
     env_file:
-      - env/influxdb.env
-      - env/postgres.env
+      - env/.env
 
   postgres:
     image: postgres
     restart: always
     env_file:
-      - env/postgres.env
+      - env/.env
     ports:
       - '5432:5432'
     volumes:
@@ -40,7 +28,7 @@ services:
     image: influxdb
     restart: always
     env_file:
-      - env/influxdb.env
+      - env/.env
     ports:
       - '8086:8086'
     volumes: 
