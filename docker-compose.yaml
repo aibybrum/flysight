@@ -14,6 +14,17 @@ services:
     env_file:
       - env/.env
 
+  jupyter_notebook:
+    build:
+      context: ./notebook
+      dockerfile: Dockerfile
+    ports:
+      - 8888:8888
+    command: "start-notebook.sh --NotebookApp.token="
+    volumes:
+      - ./notebook:/home/jovyan/notebook
+      - ./data:/home/jovyan/data
+
   postgres:
     image: postgres
     restart: always
@@ -22,7 +33,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
 
   influxdb: 
     image: influxdb
@@ -32,11 +43,8 @@ services:
     ports:
       - '8086:8086'
     volumes: 
-      - influxdb_data:/var/lib/influxdb
-
+      - influxdb:/var/lib/influxdb
 
 volumes: 
-  data:
-  postgres_data:
-  influxdb_data:
-  grafana_data:
+  postgres:
+  influxdb:
