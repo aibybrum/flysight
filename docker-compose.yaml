@@ -45,6 +45,16 @@ services:
     volumes: 
       - influxdb:/var/lib/influxdb
 
+  grafana:
+    image: grafana/grafana:latest
+    env_file:
+      - env/.env
+    ports:
+      - 3000:3000
+    depends_on:
+      - influxdb
+      - postgres
+
 volumes: 
   postgres:
   influxdb:
