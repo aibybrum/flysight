@@ -21,10 +21,22 @@ copy: ## Copy the example-environement file
 dc: docker-compose-up
 docker-compose-up: ## Start Docker Compose
 	@echo "Starting Docker Compose"
-	@docker-compose up -d
+	@sed 's/ENVIRONMENT=dev/ENVIRONMENT=docker/' env/.env > .env.tmp && \
+		mv .env.tmp env/.env && \
+		docker-compose up -d
 
-s: start
-start: ## Start Jupyter Notebook Locally
+sn: start-notebook
+start-notebook: ## Start Jupyter Notebook Locally
 	@echo "Starting Jupyter Notebook"
 	@source .venv/bin/activate && \
 		jupyter notebook
+
+sa: start-api
+start-api: ## Start SWOOPAPI Locally
+	@echo "Starting SWOOPAPI"
+	@docker-compose up -d influxdb postgres
+	@sed 's/ENVIRONMENT=docker/ENVIRONMENT=dev/' env/.env > .env.tmp && \
+		mv .env.tmp env/.env && \
+		source .venv/bin/activate && \
+		cd api && \
+		uvicorn app.main:app --host 0.0.0.0 --port 5000

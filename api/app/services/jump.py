@@ -47,8 +47,8 @@ class JumpCRUD(InfluxdbService):
         return None
 
     def create_jump(self, user_id: UUID, file: UploadFile):
-        dataset = Dataset(file.filename, pd.read_csv(file.file, skiprows=[1]), user_id)
-        df = dataset.create()
+        dataset = Dataset(file.file, file.filename, user_id)
+        df = dataset.create_jump_data()
         db_jump = JumpCreate(id=uuid4(), name=dataset.get_name(), user_id=user_id,
                              data=df.to_json(default_handler=str, orient='records'))
         write_api = self.client.write_api(write_options=SYNCHRONOUS)

@@ -5,10 +5,23 @@ import app.utils.dataset.helpers as helpers
 
 
 class Dataset:
-    def __init__(self, filename, df, user_id=None):
+    def __init__(self, file, filename, user_id=None):
+        self.file = file
         self.filename = filename
-        self.df = df
         self.user_id = user_id
+        self.df = self.read_csv()
+
+    def read_csv(self):
+        try:
+            df = pd.read_csv(self.file, skiprows=[1])
+        except Exception as e:
+            try:
+                df = pd.read_csv(self.file, skiprows=7, header=None)
+                df = df.drop(df.columns[0], axis=1)
+                df.columns = ['time', 'lat', 'lon', 'hMSL', 'velN', 'velE', 'velD', 'hAcc', 'vAcc', 'sAcc', 'numSV']
+            except Exception as e:
+                df = None
+        return df
 
     def get_total_seconds(self):
         datetimes = [pd.to_datetime(d) for d in self.df.time]
@@ -18,11 +31,9 @@ class Dataset:
             l.append(duration.total_seconds())
         return l
 
-    def get_fixed_elevation(self, elevation):
-        ground_elevation = helpers.meters_to_feet(self.df.hMSL.iloc[-1])
-        return [helpers.meters_to_feet(self.df.hMSL[i]) - ground_elevation - elevation for i in
-                range(0, len(self.df.hMSL))]
-        # return [helpers.meters_to_feet(self.df.hMSL[i]) - elevation for i in range(0, len(self.df.hMSL))]
+    def get_dynamic_elevation(self):
+        ground_elevation = helpers.meters_to_feet(self.df.hMSL.iloc[-1]) # last point in data is the ground estimation point
+        return [helpers.meters_to_feet(self.df.hMSL[i]) - ground_elevation for i in range(0, len(self.df.hMSL))]
 
     def get_vertical_speed(self, metric):
         if metric == 'mph':
@@ -47,8 +58,7 @@ class Dataset:
     def get_horizontal_distance(self, metric):
         lis, dis = [0], 0.0
         for i in range(0, len(self.df) - 1):
-            dis += helpers.calc_distance_geo(metric, self.df.lat[i], self.df.lat[i + 1], self.df.lon[i],
-                                             self.df.lon[i + 1])
+            dis += helpers.calc_distance_geo(metric, self.df.lat[i], self.df.lat[i + 1], self.df.lon[i], self.df.lon[i + 1])
             lis.append(dis)
         return lis
 
@@ -61,13 +71,14 @@ class Dataset:
             lis.append(dis)
         return lis
 
-    def create(self):
+    def create_jump_data(self):
+        print(f"Dataframe: {self.df}")
         df = pd.DataFrame({
             'timestamp': pd.to_datetime(self.df.time),
-            'time_sec': np.array(self.get_total_seconds()),
+            'time': np.array(self.get_total_seconds()),
             'lat': self.df.lat,
             'lon': self.df.lon,
-            'elevation': self.get_fixed_elevation(0),
+            'elevation': self.get_dynamic_elevation(),
             'horz_distance_ft': self.get_horizontal_distance('ft'),
             'horz_distance_m': self.get_horizontal_distance('m'),
             'x_axis_distance_ft': self.get_axis_distance('ft', 'x'),
@@ -78,19 +89,26 @@ class Dataset:
             'horz_speed_mph': self.get_horizontal_speed('mph'),
             'vert_speed_km/u': self.get_vertical_speed('km/u'),
             'horz_speed_km/u': self.get_horizontal_speed('km/u'),
-            'heading': self.df.heading,
             'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph')),
             'name': self.get_name(),
             'user_id': self.user_id})
         df.set_index('timestamp', inplace=True)
         return df
 
+    def create_pond_data(self):
+        df = pd.DataFrame({
+            'timestamp': pd.to_datetime(self.df.time),
+            'time': np.array(self.get_total_seconds()),
+            'lat': self.df.lat,
+            'lon': self.df.lon,
+            'horz_speed_mph': self.get_horizontal_speed('mph'),
+            'horz_speed_km/u': self.get_horizontal_speed('km/u')
+        })
+        df.set_index('timestamp', inplace=True)
+        return df
+
     def get_name(self):
         return pd.to_datetime(self.df.time[0]).strftime("D%m-%d-%YT%H%M") + self.filename
-
-    def save(self, path):
-        dataframe = self.create()
-        dataframe.to_csv(os.path.join(path, self.get_name() + '.csv'), index=False)
 
     def __str__(self):
         return f'{self.get_name()}'
