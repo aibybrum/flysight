@@ -38,3 +38,13 @@ def set_start_point(df, key):
     df2['y_axis_distance_ft'] = shift_df(df2, key, 'y_axis_distance_ft')
     return df2
 
+
+'''
+Find peaks and lows
+'''
+
+
+def find_peaks_lows(metric, thres_peaks, min_dist_peaks, thres_lows, min_dist_lows):
+    peaks = pu.indexes(metric, thres=thres_peaks, min_dist=min_dist_peaks)
+    lows = pu.indexes(-metric, thres=thres_lows, min_dist=min_dist_lows)
+    return {'peaks': peaks, 'lows': lows}

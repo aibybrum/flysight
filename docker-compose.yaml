@@ -24,6 +24,7 @@ services:
     volumes:
       - ./notebook:/home/jovyan/notebook
       - ./data:/home/jovyan/data
+      - ./env:/home/jovyan/env
 
   postgres:
     image: postgres

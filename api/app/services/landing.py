@@ -29,7 +29,6 @@ class LandingService(LandingCRUD):
                 max_horz_speed=landing.get_max_horz_speed_id(),
                 max_vert_speed=landing.get_max_vert_speed_id(),
                 stop=landing.get_stop_estimate(),
-                rollout=landing.get_stop_estimate()
             ),
             data=Data(
                 time=landing_df['time_sec'].values.tolist(),

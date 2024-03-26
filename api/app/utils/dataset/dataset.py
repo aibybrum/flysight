@@ -72,40 +72,47 @@ class Dataset:
         return lis
 
     def create_jump_data(self):
-        print(f"Dataframe: {self.df}")
-        df = pd.DataFrame({
-            'timestamp': pd.to_datetime(self.df.time),
-            'time': np.array(self.get_total_seconds()),
-            'lat': self.df.lat,
-            'lon': self.df.lon,
-            'elevation': self.get_dynamic_elevation(),
-            'horz_distance_ft': self.get_horizontal_distance('ft'),
-            'horz_distance_m': self.get_horizontal_distance('m'),
-            'x_axis_distance_ft': self.get_axis_distance('ft', 'x'),
-            'x_axis_distance_m': self.get_axis_distance('m', 'x'),
-            'y_axis_distance_ft': self.get_axis_distance('ft', 'y'),
-            'y_axis_distance_m': self.get_axis_distance('m', 'y'),
-            'vert_speed_mph': self.get_vertical_speed('mph'),
-            'horz_speed_mph': self.get_horizontal_speed('mph'),
-            'vert_speed_km/u': self.get_vertical_speed('km/u'),
-            'horz_speed_km/u': self.get_horizontal_speed('km/u'),
-            'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph')),
-            'name': self.get_name(),
-            'user_id': self.user_id})
-        df.set_index('timestamp', inplace=True)
-        return df
+        if self.df is not None: 
+            df = pd.DataFrame({
+                'timestamp': pd.to_datetime(self.df.time),
+                'time': np.array(self.get_total_seconds()),
+                'lat': self.df.lat,
+                'lon': self.df.lon,
+                'elevation': self.get_dynamic_elevation(),
+                'horz_distance_ft': self.get_horizontal_distance('ft'),
+                'horz_distance_m': self.get_horizontal_distance('m'),
+                'x_axis_distance_ft': self.get_axis_distance('ft', 'x'),
+                'x_axis_distance_m': self.get_axis_distance('m', 'x'),
+                'y_axis_distance_ft': self.get_axis_distance('ft', 'y'),
+                'y_axis_distance_m': self.get_axis_distance('m', 'y'),
+                'vert_speed_mph': self.get_vertical_speed('mph'),
+                'horz_speed_mph': self.get_horizontal_speed('mph'),
+                'vert_speed_km/u': self.get_vertical_speed('km/u'),
+                'horz_speed_km/u': self.get_horizontal_speed('km/u'),
+                'dive_angle': self.get_dive_angle(self.get_vertical_speed('mph'), self.get_horizontal_speed('mph')),
+                'name': self.get_name(),
+                'user_id': self.user_id})
+            df.set_index('timestamp', inplace=True)
+            return df
+        else: 
+            logging.error("dataframe is None type")
+            raise Exception("dataframe is None type")
 
     def create_pond_data(self):
-        df = pd.DataFrame({
-            'timestamp': pd.to_datetime(self.df.time),
-            'time': np.array(self.get_total_seconds()),
-            'lat': self.df.lat,
-            'lon': self.df.lon,
-            'horz_speed_mph': self.get_horizontal_speed('mph'),
-            'horz_speed_km/u': self.get_horizontal_speed('km/u')
-        })
-        df.set_index('timestamp', inplace=True)
-        return df
+        if self.df is not None: 
+            df = pd.DataFrame({
+                'timestamp': pd.to_datetime(self.df.time),
+                'time': np.array(self.get_total_seconds()),
+                'lat': self.df.lat,
+                'lon': self.df.lon,
+                'horz_speed_mph': self.get_horizontal_speed('mph'),
+                'horz_speed_km/u': self.get_horizontal_speed('km/u')
+            })
+            df.set_index('timestamp', inplace=True)
+            return df
+        else: 
+            logging.error("dataframe is None type")
+            raise Exception("dataframe is None type")
 
     def get_name(self):
         return pd.to_datetime(self.df.time[0]).strftime("D%m-%d-%YT%H%M") + self.filename
