@@ -21,5 +21,10 @@ bucket = os.getenv('DOCKER_INFLUXDB_INIT_BUCKET')
 client = InfluxDBClient(
     url=url,
     token=token,
-    org=org
+    org=org,
+    enable_gzip=True,  
+    buffer_capacity=10000,  
+    batch_size=5000, 
+    retries=3,  
+    max_retry_delay=5000
 )

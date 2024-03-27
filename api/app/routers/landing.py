@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from uuid import UUID
-from app.config.influxdb import client, bucket, org
 from app.schemas.landing import Landing
-from app.services.landing import LandingService
+from app.services.jump.landing import LandingService
+from app.utils.service_result import handle_result
 
 router = APIRouter(
     prefix="/landings",
@@ -13,7 +13,5 @@ router = APIRouter(
 
 @router.get("/{jump_id}", response_model=Landing)
 async def get_landings(jump_id: UUID):
-    db_landing = LandingService(bucket, client).get_landing(jump_id)
-    if db_landing is None:
-        raise HTTPException(status_code=404, detail="Jump not found")
-    return db_landing
+    result = LandingService(jump_id).get_landing()
+    return handle_result(result)

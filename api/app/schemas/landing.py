@@ -19,13 +19,12 @@ class Distance(BaseModel):
 
 
 class Data(BaseModel):
-    time: List[float]
+    time_sec: List[float]
     location: Location
     elevation: List[float]
     distance: Distance
     speed: Speed
     dive_angle: List[float]
-    heading: List[float]
 
 
 class Features(BaseModel):
@@ -37,5 +36,4 @@ class Features(BaseModel):
 
 class Landing(BaseModel):
     name: str
-    features: Features
     data: Data

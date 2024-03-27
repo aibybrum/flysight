@@ -11,7 +11,14 @@ class PostgresService(DBSessionContext):
     pass
 
 
-class InfluxdbService:
-    def __init__(self, bucket: influxdb.bucket, client: influxdb.client):
-        self.bucket = bucket
-        self.client = client
+class PostgresCRUD(DBSessionContext):
+    pass
+
+
+class InfluxdbServiceContext(object):
+    def __init__(self):
+        self.bucket = influxdb.bucket
+        self.client = influxdb.client
+
+class InfluxdbCRUD(InfluxdbServiceContext):
+    pass
