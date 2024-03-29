@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 
-@router.get("/user/{user_id}", response_model=List[Jump])
+@router.get("/users/{user_id}", response_model=List[Jump])
 async def get_jumps_by_user(user_id: UUID, jump_service: JumpService = Depends(get_jump_service)):
     result = jump_service.get_jumps_by_user(user_id)
     return handle_result(result)
@@ -33,8 +33,7 @@ async def delete_jump(jump_id: UUID, jump_service: JumpService = Depends(get_jum
     return handle_result(result)
 
 
-@router.delete("/user/{user_id}")
+@router.delete("/users/{user_id}")
 async def delete_jumps_by_user(user_id: UUID, jump_service: JumpService = Depends(get_jump_service)):
     result = jump_service.delete_jumps_by_user(user_id)
     return handle_result(result)
-    

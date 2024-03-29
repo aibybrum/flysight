@@ -9,8 +9,7 @@ class LandingCRUD(InfluxDBService):
         query = f'from(bucket: "{self.bucket}") |> range(start: 0) ' \
                 f'|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value") ' \
                 f'|> filter(fn: (r) => r._measurement == "{jump_id}")'
-        df = self.get_data_frame(query)
+        df = self.client.query_api().query_data_frame(query=query)
         if not df.empty:
             return df['name'][0], df.drop(['result', 'table', '_start', '_stop', '_time', '_measurement', 'name', 'user_id'], axis=1)
         return None
-        
