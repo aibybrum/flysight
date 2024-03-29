@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from uuid import UUID
 from app.schemas.landing import Landing
-from app.services.jump.landing import LandingService
+from app.services.landing.landing_service import LandingService
 from app.utils.service_result import handle_result
 
 router = APIRouter(

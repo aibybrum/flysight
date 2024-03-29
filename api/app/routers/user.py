@@ -1,12 +1,13 @@
 from typing import List
 from uuid import UUID
-
 from fastapi import APIRouter, Depends, HTTPException
 
-from app.services.user import UserService
-from app.schemas.user import User, UserCreate, UserUpdate
-from app.config.postgres import get_db
+from sqlalchemy.orm import Session
+from app.dependencies import get_user_service
+from app.services.user.user_service import UserService
 from app.utils.service_result import handle_result
+from app.schemas.user import User, UserCreate, UserUpdate
+
 
 router = APIRouter(
     prefix="/users",
@@ -16,31 +17,31 @@ router = APIRouter(
 
 
 @router.get("", response_model=List[User])
-async def get_users(db: get_db = Depends()):
-    result = UserService(db).get_users()
+async def get_users(user_service: UserService = Depends(get_user_service)):
+    result = user_service.get_users()
     return handle_result(result)
 
 
-@router.get("/{user_id}", response_model=User)
-async def get_user(user_id: UUID, db: get_db = Depends()):
-    result = UserService(db).get_user(user_id)
-    return handle_result(result)
+# @router.get("/{user_id}", response_model=User)
+# async def get_user(user_id: UUID, user_service: UserService = Depends(get_user_service)):
+#     result = user_service.get_user(user_id)
+#     return handle_result(result)
 
 
 @router.post("", response_model=User)
-async def create_user(user: UserCreate, db: get_db = Depends()):
-    result = UserService(db).create_user(user)
+async def create_user(user: UserCreate, user_service: UserService = Depends(get_user_service)):
+    result = user_service.create_user(user)
     return handle_result(result)
 
 
 @router.delete("/{user_id}")
-async def delete_user(user_id: UUID, db: get_db = Depends()):
-    result = UserService(db).delete_user(user_id)
+async def delete_user(user_id: UUID, user_service: UserService = Depends(get_user_service)):
+    result = user_service.delete_user(user_id)
     return handle_result(result)
 
 
 @router.put("/{user_id}", response_model=User)
-async def update_user(user_id: UUID, user: UserUpdate, db: get_db = Depends()):
-    result = UserService(db).update_user(user_id, user)
+async def update_user(user_id: UUID, user: UserUpdate, user_service: UserService = Depends(get_user_service)):
+    result = user_service.update_user(user_id, user)
     return handle_result(result)
     
