@@ -13,3 +13,4 @@ class LandingCRUD(InfluxDBService):
         if not df.empty:
             return df['name'][0], df.drop(['result', 'table', '_start', '_stop', '_time', '_measurement', 'name', 'user_id'], axis=1)
         return None
+        

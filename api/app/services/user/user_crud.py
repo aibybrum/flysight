@@ -33,3 +33,4 @@ class UserCRUD(AppCRUD):
         self.db.commit()
         self.db.refresh(db_user)
         return db_user
+        

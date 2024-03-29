@@ -49,3 +49,4 @@ def find_peaks_lows(metric, thres_peaks, min_dist_peaks, thres_lows, min_dist_lo
     peaks = pu.indexes(metric, thres=thres_peaks, min_dist=min_dist_peaks)
     lows = pu.indexes(-metric, thres=thres_lows, min_dist=min_dist_lows)
     return {'peaks': peaks, 'lows': lows}
+    

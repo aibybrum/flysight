@@ -45,3 +45,4 @@ def handle_result(result: ServiceResult):
             raise exception
     with result as result:
         return result
+        

@@ -61,6 +61,4 @@ class AppException:
 
     class LandingNotFound(_AppExceptionTemplate):
         def __init__(self, context: dict = None):
-            super().__init__(404, "Landing not found", context)
-
-            
+            super().__init__(404, "Landing not found", context)         

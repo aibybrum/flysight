@@ -37,3 +37,4 @@ async def delete_jump(jump_id: UUID, jump_service: JumpService = Depends(get_jum
 async def delete_jumps_by_user(user_id: UUID, jump_service: JumpService = Depends(get_jump_service)):
     result = jump_service.delete_jumps_by_user(user_id)
     return handle_result(result)
+    

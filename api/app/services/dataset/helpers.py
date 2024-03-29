@@ -52,3 +52,4 @@ def calc_axis_distance(metric, lat, lon):
         return [meters_to_feet(x_cor) for x_cor in x], [meters_to_feet(y_cor) for y_cor in y]
     elif metric == 'm':
         return x, y
+        

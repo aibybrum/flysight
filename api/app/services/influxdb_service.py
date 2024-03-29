@@ -9,3 +9,4 @@ class InfluxDBService:
         response = self.client.query_api().query(query=query)
         data_df = pd.DataFrame(response.records)
         return data_df
+        
