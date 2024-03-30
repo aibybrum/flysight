@@ -11,27 +11,54 @@ from app.schemas.landing import Landing, Features, Data, Location, Distance, Spe
 
 
 class LandingService():
-    def __init__(self, jump_id: UUID):
-        self.landing = None
+    def __init__(self, jump_service):
+        self.jump_service = jump_service
+
+    def process_and_get_landing(self, jump_id):
+        name, df = LandingCRUD().get_dataset(jump_id)
+        if df is not None:
+            processor = LandingProcessor(df, name)
+            processor.process_landing()
+            return processor.landing
+        return None
+
+    def get_landing(self, jump_id) -> ServiceResult:
+        jump_result = self.jump_service.get_jump(jump_id)
+        if not jump_result.success:
+            return jump_result
+
+        landing = self.process_and_get_landing(jump_id)
+        if landing:
+            return ServiceResult(landing)
+        return ServiceResult(AppException.LandingNotFound())
+
+
+class LandingProcessor():
+    def __init__(self, df, name):
+        self.df = df
+        self.name = name
         self.start_elevation = 2000
-        self.name, self.df = LandingCRUD().get_dataset(jump_id)
-        if self.df is not None:
-            self.process_landing()
+        self.landing = None
+        self.exit_df = None
+        self.landing_df = None
+        self.start_elevation_df = None
 
     def process_landing(self):
         self.exit_df = ExitService(self.df).get_exit_df()
         self.start_elevation_df = self.exit_df[self.exit_df.elevation <= self.start_elevation].reset_index(drop=True)
         if self.is_init_turn_detected():
             self.landing_df = self.start_elevation_df.iloc[self.get_init_turn():].reset_index(drop=True)
-            # self.set_start_point()
             self.landing = self.create_landing()
         else:
-            return ServiceResult({"message": "No high performance landing detected"})
+            self.landing = None
             
     def is_init_turn_detected(self):
         return self.get_init_turn() is not None
 
     def get_init_turn(self):
+        if self.start_elevation_df is None or len(self.start_elevation_df) < 1:
+            return None
+
         landing_vert_speed = helpers.find_peaks_lows(self.start_elevation_df['vert_speed_km/u'], thres_peaks=0.5, min_dist_peaks=0.1, thres_lows=0.75, min_dist_lows=5)        
         # The initiated turn is where the vertspeed is the lowest and starts to increase
         lows_keys = [low for low in landing_vert_speed['lows'] if low <= landing_vert_speed['peaks'][-1]]
@@ -125,9 +152,3 @@ class LandingService():
                 dive_angle=self.landing_df['dive_angle'].values.tolist(),
             ),
         )
-
-    def get_landing(self) -> ServiceResult:
-        if self.landing:
-            return ServiceResult(self.landing)
-        else:
-            return ServiceResult(AppException.LandingNotFound())

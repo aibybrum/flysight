@@ -11,6 +11,12 @@ class JumpService():
     def __init__(self, user_service):
         self.user_service = user_service
 
+    def get_jump(self, jump_id: UUID):
+        db_jump = JumpCRUD().get_jump(jump_id)
+        if db_jump is None:
+            return ServiceResult(AppException.JumpNotFound())
+        return ServiceResult(db_jump)
+
     def get_jumps_by_user(self, user_id: UUID) -> ServiceResult:
         user_result = self.user_service.get_user(user_id)
         if not user_result.success:
