@@ -15,7 +15,7 @@ class UserCRUD(AppCRUD):
 
     def create_user(self, user: UserCreate):
         password = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
-        db_user = User(id=uuid4(), username=user.username, hashed_password=password)
+        db_user = User(id=uuid4(), name=user.name, email=user.email, hashed_password=password)
         self.db.add(db_user)
         self.db.commit()
         self.db.refresh(db_user)
@@ -28,8 +28,11 @@ class UserCRUD(AppCRUD):
 
     def update_user(self, user_id: UUID, user: UserUpdate):
         db_user = self.db.query(User).filter(User.id == user_id).first()
-        db_user.username = user.username
-        db_user.password = user.password
+        db_user.name = user.name
+        if user.email:
+            db_user.email = user.email
+        if user.password:
+            db_user.password = user.password
         self.db.commit()
         self.db.refresh(db_user)
         return db_user

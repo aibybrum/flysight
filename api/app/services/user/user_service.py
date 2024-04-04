@@ -21,7 +21,7 @@ class UserService(AppService):
         return ServiceResult(db_user)
 
     def create_user(self, user: UserCreate) -> ServiceResult:
-        if self.check_username(user.username):
+        if self.check_name(user.name):
             return ServiceResult(AppException.UsernameAlreadyExists())
         db_user = UserCRUD(self.db).create_user(user)
         if not db_user:
@@ -48,8 +48,8 @@ class UserService(AppService):
             return ServiceResult(AppException.UserNotModified())
         return ServiceResult(db_user)
 
-    def check_username(self, username: str) -> bool:
-        db_user = self.db.query(User).filter(User.username == username).first()
+    def check_name(self, name: str) -> bool:
+        db_user = self.db.query(User).filter(User.name == name).first()
         if db_user:
             return True
         else:

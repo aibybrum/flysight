@@ -74,28 +74,3 @@ The FlySight2 includes supplementary sensor data, comprising the following infor
 It's important to note that as of now, this additional data is not utilized in the current application.
 
 For the comprehensive technical specifications FlySight 2, refer to the official documentation [link](https://content.u-blox.com/sites/default/files/products/documents/u-blox6_ReceiverDescrProtSpec_%28GPS.G6-SW-10018%29_Public.pdf). Get ready to elevate your swooping experience with the SG3K and FlySight 2 - the perfect duo for soaring to new heights!
-
-<br/>
-
-# Angular commands to remember
-
-// node.js version
-node -v
-
-// angular version
-ng version
-
-// install
-npm install -g @angular/cli
-// update
-npm install -g @angular/cli@latest
-
-// creating new app
-ng new app
-
-// install plotly packages
-npm install angular-plotly.js plotly.js-dist-min --save
-npm install @types/plotly.js-dist-min --save-dev
-
-// start app
-ng serve / npm start

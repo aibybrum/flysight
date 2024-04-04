@@ -1,17 +1,22 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+from typing import Optional
 from uuid import UUID
 
 
 class UserBase(BaseModel):
-    username: str
+    name: str
+    email: EmailStr
 
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
     password: str
 
-
-class UserUpdate(UserBase):
-    password: str
+class UserUpdate(BaseModel):
+    name: str
+    email: Optional[EmailStr]
+    password: Optional[str]
 
 
 class User(UserBase):
