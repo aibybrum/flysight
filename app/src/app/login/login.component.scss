@@ -1,0 +1,42 @@
+.banner {
+    background: #020202 url('../../assets/images/login-banner.jpeg') no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
+
+.banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 0;
+}
+
+.banner header {
+    z-index: 1;
+}
+
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.navbar-brand{
+    color: var(--bs-white) !important;
+}
+
+@media (max-width: 767px) {
+    .banner {
+        display: none;
+    }
+
+    .navbar-brand {
+        color: var(--bs-dark) !important;
+    }
+}

@@ -1,53 +1,35 @@
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-7 banner">
-            <div class="row">
-                <div class="col-12 d-flex align-items-center">
-                    <p class="m-0"><a href="#" title="Welcome on our website SG3K" class="ir">SG<span
-                                style="color: #057DE5;">3</span>K</a></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-10 d-flex flex-column justify-content-center">
-                    <h1 class="title">"Unleash the power in your swooping journey with SG<span
-                            style="color: #057DE5;">3</span>K"</h1>
-                                        <p class="mb-0">The advanced GPS tool designed to fuel continuous improvement for all skill levels
-                        and transform every jump into an opportunity for growth.</p>
-                </div>
-            </div>
-
+    <nav class="navbar navbar-light">
+        <div class="container-fluid">
+            <a [routerLink]="['/']" class="navbar-brand mt-3 ms-3">SG<span class="text-primary">3</span>K</a>
         </div>
-        <div class="col-5">
-            <div class="row get-started">
-
+    </nav>
+    <div class="row vh-100">
+        <div class="banner col-lg-7 col-md-6">
+            <div class="row h-100">
+                <header class="col-md-6 w-75 ms-3 text-white my-auto">
+                    <h1 id="title-element"></h1>
+                    <p id="text-element"></p>
+                </header>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-6">
+            <div class="row justify-content-center align-items-center" style="height: 87%;">
+                <div class="col-md-12 col-lg-10 col-xl-8">
+                    <h2 class="text-center mb-2">Get started</h2>
+                    <div class="row m-1">
+                        <div class="col-md-6 col-12 mb-1 p-1">
+                            <button [routerLink]="['/auth/login']" type="submit" class="btn btn-primary w-100">Log in</button>
+                        </div>
+                        <div class="col-md-6 col-12 p-1">
+                            <button [routerLink]="['/auth/signup']" type="submit" class="btn btn-primary w-100">Sign up</button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="d-flex flex-column align-items-center justify-content-center" style="height: 13%;">
+                <p class="m-0 text-light fw-light">© bram langmans <span class="year">2024</span></p>
             </div>
         </div>
     </div>
 </div>
-
-
-<!-- <div class="col-7 justify-content-center">
-            <div class="row">
-                
-            </div>
-            <div class="col d-flex w-100">
-                <h1 class="home title">"Unleash the power in your swooping journey with SG<span style="color: #057DE5;">3</span>K"</h1>
-                
-            </div>
-        </div>
-        <div class="col-5">
-            <div class="row get-started gx-5">
-                <h2>Get started</h2>
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary">Log in</button>
-                </div>
-                <div class="col-6">
-                    <button type="submit" class="btn btn-primary">Sign up</button>
-                </div>
-            </div>
-            <div class="row text-center">
-                <p class="copyright">
-                    © bram langmans <span class="year">2024</span>
-                </p>
-            </div>
-        </div> -->
