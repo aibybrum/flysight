@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <nav class="navbar navbar-light">
+    <nav class="navbar fixed-top navbar-dark">
         <div class="container-fluid">
             <a [routerLink]="['/']" class="navbar-brand mt-3 ms-3">SG<span class="text-primary">3</span>K</a>
         </div>
@@ -23,13 +23,13 @@
                     <form (submit)="onSubmit()">
                         <div class="form-group">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="text" id="email" [(ngModel)]="username" name="email" class="form-control" required>
+                            <input type="text" id="email" [(ngModel)]="email" name="email" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label for="password" id="password-label" class="form-label mt-1">Password</label>
+                            <label for="password" id="password-label" class="form-label mt-2">Password</label>
                             <input type="password" id="password" [(ngModel)]="password" name="password" class="form-control" required>
                         </div>
-                        <div class="form-row my-3 d-flex justify-content-between">
+                        <div class="form-row mt-3 d-flex justify-content-between">
                             <div class="form-check">
                               <input type="checkbox" id="remember-me" name="remember-me" class="form-check-input">
                               <label for="remember-me" class="form-check-label">Remember me</label>
@@ -38,13 +38,13 @@
                                 <button type="button" (click)="onForgotPassword()" class="btn btn-link text-muted text-decoration-none p-0" [disabled]="true">Forgot password</button>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Log in</button>
+                        <button type="submit" class="btn btn-primary w-100 my-3">Log in</button>
                     </form>
-                    <div class="signup-link text-center" *ngIf="showSignup">
+                    <div class="signup-link text-center">
                         <p>Don't have an account? <a [routerLink]="['/auth/signup']" (click)="onSignup()" class="text-primary text-decoration-none">Sign up</a></p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 </div>

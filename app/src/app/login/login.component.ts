@@ -6,9 +6,8 @@ import { Component } from '@angular/core';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  username: string = '';
+  email: string = '';
   password: string = '';
-  showSignup: boolean = true;
 
   onSubmit() {
     // TODO: Implement login logic
@@ -19,6 +18,6 @@ export class LoginComponent {
   }
 
   onSignup() {
-    this.showSignup = true;
+    //
   }
 }

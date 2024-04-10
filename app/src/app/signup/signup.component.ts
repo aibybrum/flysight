@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
+  name: string = '';
+  email: string = '';
+  password: string = '';
 
+  onSubmit() {
+    // TODO: Implement login logic
+  }
 }

@@ -97,4 +97,5 @@ ng generate module <module-name>
 
 # Customising Bootstrap
 
-https://medium.com/@kathar.rahul/scss-integration-with-bootstrap-5-in-angular-8e12ddf9b471
+https://medium.com/swlh/how-to-structure-scss-in-an-angular-app-a1b8a759a028
+https://sass-guidelin.es/#architecture

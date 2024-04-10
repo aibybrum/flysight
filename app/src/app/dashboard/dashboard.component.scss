@@ -1,0 +1,24 @@
+@import "../../scss/abstracts/variables";
+
+.app-header {
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    height: 4rem;
+    z-index: 2;
+}
+
+main {
+    position: absolute;
+    width: 100%;
+    top: 4rem;
+    z-index: 1;
+}
+
+app-side-nav {
+    position: absolute;
+    left: 0rem;
+    width: 250px;
+    height: calc(100vh - 4rem);
+    background-color: $light;
+}
