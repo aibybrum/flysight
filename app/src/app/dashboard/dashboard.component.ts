@@ -8,4 +8,10 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 })
 export class DashboardComponent {
   faBars = faBars;
+
+  sideNavbarActive: boolean = true;
+
+  toggleSideNavbar() {
+    this.sideNavbarActive = !this.sideNavbarActive;
+  }
 }

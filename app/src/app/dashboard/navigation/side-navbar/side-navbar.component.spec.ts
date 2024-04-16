@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SideNavComponent } from './side-nav.component';
+import { SideNavbarComponent } from './side-navbar.component';
 
-describe('SideNavComponent', () => {
-  let component: SideNavComponent;
-  let fixture: ComponentFixture<SideNavComponent>;
+describe('SideNavbarComponent', () => {
+  let component: SideNavbarComponent;
+  let fixture: ComponentFixture<SideNavbarComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SideNavComponent]
+      declarations: [SideNavbarComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(SideNavComponent);
+    fixture = TestBed.createComponent(SideNavbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

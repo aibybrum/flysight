@@ -15,7 +15,6 @@ import { BaseComponent } from './core/base/base.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
-import { HeaderComponent } from './dashboard/header/header.component';
 import { JumpDataTableComponent } from './dashboard/jump-data-table/jump-data-table.component';
 import { ChartComponent } from './dashboard/chart/chart.component';
 import { UploadFileComponent } from './dashboard/upload-file/upload-file.component';
@@ -24,7 +23,8 @@ import { MetricsComponent } from './dashboard/metrics/metrics.component';
 import { SideViewFlightPathComponent } from './dashboard/side-view-flight-path/side-view-flight-path.component';
 import { MapComponent } from './dashboard/map/map.component';
 import { OverheadViewFlightPathComponent } from './dashboard/overhead-view-flight-path/overhead-view-flight-path.component';
-import { SideNavComponent } from './dashboard/side-nav/side-nav.component';
+import { SideNavbarComponent } from './dashboard/navigation/side-navbar/side-navbar.component';
+import { TopNavbarComponent } from './dashboard/navigation/top-navbar/top-navbar.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -43,7 +43,6 @@ const appRoutes: Routes = [
     DashboardComponent,
     LoginComponent,
     SignupComponent,
-    HeaderComponent,
     JumpDataTableComponent,
     ChartComponent,
     UploadFileComponent,
@@ -52,7 +51,8 @@ const appRoutes: Routes = [
     SideViewFlightPathComponent,
     MapComponent,
     OverheadViewFlightPathComponent,
-    SideNavComponent
+    SideNavbarComponent,
+    TopNavbarComponent
   ],
   imports: [
     BrowserModule,
