@@ -1,68 +1,68 @@
-@import "../../../../scss/abstracts/variables";
+// @import "../../../../scss/abstracts/variables";
 
-.side-navbar {
-    position: fixed;
-    height: 100vh;
-    width: 260px;
-    background: $light;
-    overflow: hidden;
-    transition: 0.5s ease;
-}
+// .side-navbar {
+//     position: fixed;
+//     height: 100vh;
+//     width: 260px;
+//     background: $light;
+//     overflow: hidden;
+//     transition: 0.5s ease;
+// }
 
-.side-navbar ul {
-    top: 0;
-    left: 0;
-    width: 100%;  
-}
+// .side-navbar ul {
+//     top: 0;
+//     left: 0;
+//     width: 100%;  
+// }
 
-.side-navbar ul li {
-    width: 100%;
-}
+// .side-navbar ul li {
+//     width: 100%;
+// }
   
-.side-navbar ul li:hover {
-    background: #057DE5;
-}
+// .side-navbar ul li:hover {
+//     background: #057DE5;
+// }
 
-.side-navbar ul li:first-child {
-    margin-bottom: 1rem;
-    background: none;
-}
+// .side-navbar ul li:first-child {
+//     margin-bottom: 1rem;
+//     background: none;
+// }
 
-.side-navbar ul li a {
-    display: block;
-    width: 100%;
-    display: flex;
-    color: $body-color;
-}
+// .side-navbar ul li a {
+//     display: block;
+//     width: 100%;
+//     display: flex;
+//     color: $body-color;
+// }
 
-.side-navbar ul li a .icon {
-    min-width: 60px;
-    display: block;
-    font-size: 25px;
-    line-height: 60px;
-    height: 60px;
-    text-align: center;
-}
+// .side-navbar ul li a .icon {
+//     min-width: 60px;
+//     display: block;
+//     font-size: 25px;
+//     line-height: 60px;
+//     height: 60px;
+//     text-align: center;
+// }
   
-.side-navbar ul li a .text {
-    display: block;
-    padding: 0 10px;
-    line-height: 60px;
-    height: 60px;
-    white-space: nowrap;
-}
+// .side-navbar ul li a .text {
+//     display: block;
+//     padding: 0 10px;
+//     line-height: 60px;
+//     height: 60px;
+//     white-space: nowrap;
+// }
 
-.side-navbar.active {
-    width: 60px;
-}
+// .side-navbar.active {
+//     width: 60px;
+// }
 
-@media (max-width: 768px) {
-    .side-navbar {
-      width: 60px;
-      left: -60px;
-    }
+// @media (max-width: 768px) {
+//     .side-navbar {
+//       width: 60px;
+//       left: -60px;
+//     }
 
-    .side-navbar.active {
-      left: 0;
-    }
-}
+//     .side-navbar.active {
+//       left: 0;
+//     }
+// }

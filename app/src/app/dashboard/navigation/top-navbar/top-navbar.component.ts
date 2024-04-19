@@ -1,15 +1,42 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { faBars, faBell, faSearch } from '@fortawesome/free-solid-svg-icons';
-
 
 @Component({
   selector: 'app-top-navbar',
   templateUrl: './top-navbar.component.html',
-  styleUrl: './top-navbar.component.scss'
+  styleUrl: './top-navbar.component.scss',
 })
 export class TopNavbarComponent {
-  faBars = faBars;
-  faBell = faBell;
-  faSearch = faSearch;
-  // @Output() toggleSideNavbar = new EventEmitter<void>();
+  // public iconOnlyToggled = false;
+  // public sidebarToggled = false;
+  
+  // constructor(config: NgbDropdownConfig) {
+  //   config.placement = 'bottom-right';
+  // }
+
+  ngOnInit() {
+  }
+
+  // toggle sidebar in small devices
+  toggleOffcanvas() {
+    // document.querySelector('.sidebar-offcanvas').classList.toggle('active');
+  }
+
+  // toggle sidebar
+  toggleSidebar() {
+    // let body = document.querySelector('body');
+    // if((!body.classList.contains('sidebar-toggle-display')) && (!body.classList.contains('sidebar-absolute'))) {
+    //   this.iconOnlyToggled = !this.iconOnlyToggled;
+    //   if(this.iconOnlyToggled) {
+    //     body.classList.add('sidebar-icon-only');
+    //   } else {
+    //     body.classList.remove('sidebar-icon-only');
+    //   }
+    // } else {
+    //   this.sidebarToggled = !this.sidebarToggled;
+    //   if(this.sidebarToggled) {
+    //     body.classList.add('sidebar-hidden');
+    //   } else {
+    //     body.classList.remove('sidebar-hidden');
+    //   }
+    }
 }

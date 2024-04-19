@@ -1,13 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 
-    "abstracts/variables";
-
-@import 
-    "base/typography";
+    "abstracts/variables",
+    "abstracts/mixins";
 
 @import
     "components/buttons";
 
 @import 
-    "vendors/bootstrap";
+    "vendors/bootstrap",
+    "vendors/mdi";
+

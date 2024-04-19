@@ -25,10 +25,12 @@ npm install @types/plotly.js-dist-min --save-dev
 
 //adding bootstrap
 npm install bootstrap
+ng add @ng-bootstrap/ng-bootstrap
+
 https://www.hvdig.us/angular-agency/angular-bootstrap-adding-bootstrap-to-an-angular-application
 
-// adding fontawesome
-npm i @fortawesome/angular-fontawesome
+// Icons
+@mdi/font
 
 // start app
 ng serve / npm start
@@ -38,6 +40,7 @@ ng serve / npm start
 ng generate component <component-name>
 ng generate service <service-name>
 ng generate module <module-name>
+ng generate interface models/<interface-name>
 
 ## Component Overview
 

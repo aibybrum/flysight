@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { faBug, faSignOut, faCompass } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-side-navbar',
@@ -7,7 +6,5 @@ import { faBug, faSignOut, faCompass } from '@fortawesome/free-solid-svg-icons';
   styleUrl: './side-navbar.component.scss'
 })
 export class SideNavbarComponent {
-  faBug = faBug;
-  faSignOut = faSignOut;
-  faCompass = faCompass;
+
 }
