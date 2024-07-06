@@ -1,19 +1,16 @@
-<!-- <div class="side-navbar">
-    <ul class = "list-unstyled">
-        <li>
-            <a [routerLink]="['/']" class="navbar-brand mt-3 ms-3">SG<span class="text-primary">3</span>K</a>
-        </li>
-        <li><a href="#" class="text-decoration-none">
-            <span class="icon"><fa-icon [icon]="faCompass"></fa-icon></span>
-            <span class="text">Dashboard</span>
-        </a></li>
-        <li><a href="#" class="text-decoration-none">
-            <span class="icon"><fa-icon [icon]="faBug"></fa-icon></span>
-            <span class="text">Debug</span>
-        </a></li>
-        <li><a href="#" class="text-decoration-none">
-            <span class="icon"><fa-icon [icon]="faSignOut"></fa-icon></span>
-            <span class="text">Log-Out</span>
-        </a></li>
-    </ul>
-</div> -->
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item">
+      <a class="nav-link" (click)="clickedMenu($event)" id="nav-link1" [ngClass]="{'active': dashboardLink.isActive}">
+        <span class="menu-title">Dashboard</span>
+      </a>
+      <div class="collapse" [ngbCollapse]="parentId !== 'nav-link1'">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" #dashboardLink="routerLinkActive">Dashboard 1</a>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</nav>

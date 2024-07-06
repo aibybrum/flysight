@@ -1,42 +1,32 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import { NgbDropdownConfig } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-top-navbar',
   templateUrl: './top-navbar.component.html',
   styleUrl: './top-navbar.component.scss',
+  providers: [NgbDropdownConfig]
 })
-export class TopNavbarComponent {
-  // public iconOnlyToggled = false;
-  // public sidebarToggled = false;
-  
-  // constructor(config: NgbDropdownConfig) {
-  //   config.placement = 'bottom-right';
-  // }
+export class TopNavbarComponent implements OnInit {
+  public iconOnlyToggled = false;
+  public sidebarToggled = false;
 
-  ngOnInit() {
-  }
-
-  // toggle sidebar in small devices
-  toggleOffcanvas() {
-    // document.querySelector('.sidebar-offcanvas').classList.toggle('active');
-  }
-
-  // toggle sidebar
-  toggleSidebar() {
-    // let body = document.querySelector('body');
-    // if((!body.classList.contains('sidebar-toggle-display')) && (!body.classList.contains('sidebar-absolute'))) {
-    //   this.iconOnlyToggled = !this.iconOnlyToggled;
-    //   if(this.iconOnlyToggled) {
-    //     body.classList.add('sidebar-icon-only');
-    //   } else {
-    //     body.classList.remove('sidebar-icon-only');
-    //   }
-    // } else {
-    //   this.sidebarToggled = !this.sidebarToggled;
-    //   if(this.sidebarToggled) {
-    //     body.classList.add('sidebar-hidden');
-    //   } else {
-    //     body.classList.remove('sidebar-hidden');
-    //   }
+  toggleRightSidebar() {
+    const sidebarOffcanvas = document.querySelector('.sidebar-offcanvas');
+    if (sidebarOffcanvas) {
+      sidebarOffcanvas.classList.toggle('active');
+    } else {
+      console.warn("No element with class 'sidebar-offcanvas' found.");
     }
+  }
+
+  toggleIconOnlySidebar() {
+    this.iconOnlyToggled =!this.iconOnlyToggled;
+    (document.querySelector("body")?? document.body).classList.toggle("sidebar-icon-only", this.iconOnlyToggled);
+  }
+
+  constructor(config: NgbDropdownConfig) {
+    config.placement = "bottom-right";
+  }
+  ngOnInit() {}
 }

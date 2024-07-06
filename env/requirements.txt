@@ -18,3 +18,6 @@ bcrypt==4.1.2
 python-multipart==0.0.9
 loguru==0.7.2
 pydantic[email]
+panel==1.4.3
+ipywidgets==8.1.3
+import-ipynb==0.1.4

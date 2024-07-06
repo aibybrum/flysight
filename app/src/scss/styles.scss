@@ -1,13 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+/* Styles */
 
 @import 
     "abstracts/variables",
-    "abstracts/mixins";
+    "abstracts/mixins",
+    "abstracts/misc";
 
 @import
-    "components/buttons";
+    "base/fonts",
+    "base/typography",
+    "base/reset",
+    "base/utilities";
+
+@import
+    "layout/navbar";
+
+@import
+    "components/buttons",
+    "components/dropdowns",
+    "components/forms",
+    "components/nav";
 
 @import 
     "vendors/bootstrap",
     "vendors/mdi";
-
