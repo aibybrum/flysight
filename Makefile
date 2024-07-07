@@ -25,12 +25,6 @@ docker-compose-up: ## Start Docker Compose
 		mv .env.tmp env/.env && \
 		docker-compose up -d
 
-sn: start-notebook
-start-notebook: ## Start Jupyter Notebook Locally
-	@echo "Starting Jupyter Notebook"
-	@source .venv/bin/activate && \
-		jupyter notebook
-
 sa: start-api
 start-api: ## Start SWOOPAPI Locally
 	@echo "Starting SWOOPAPI"
@@ -40,3 +34,9 @@ start-api: ## Start SWOOPAPI Locally
 		source .venv/bin/activate && \
 		cd api && \
 		uvicorn app.main:app --host 0.0.0.0 --port 5000
+
+# sn: start-notebook
+# start-notebook: ## Start Jupyter Notebook Locally
+# 	@echo "Starting Jupyter Notebook"
+# 	@source .venv/bin/activate && \
+# 		jupyter notebook
