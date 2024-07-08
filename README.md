@@ -23,44 +23,43 @@ For those who crave the technical details, let's take a peek into the comparison
 
 <tr><td>
 
-| **Name**   | **Unit**  | **Description**                               |
-|:-----------|:----------|:----------------------------------------------|
-| time       | datetime  | Time in ISO8601 format                        |
-| lat        | deg       | Latitude                                      |
-| lon        | deg       | Longitude                                     |
-| hMSL       | m         | Height above mean sea level                   |
-| velN       | m/s       | NED north velocity                            |
-| velE       | m/s       | NED east velocity                             |
-| velD       | m/s       | NED down velocity                             |
-| hAcc       | m         | Horizontal Accuracy Estimate                  |
-| vAcc       | m         | Vertical Accuracy Estimate                    |
-| sAcc       | m/s       | Speed Accuracy Estimate                       |
-| heading    | deg       | Heading of motion 2-D                         |
-| cAcc       | deg       | Course / Heading Accuracy Estimate            |
-| gpsFix     | -         | GPSfix Type (3 = 3D)                          |
-| numSV      | -         | # of satellites following.                    |
+| **Name** | **Unit** | **Description**                    |
+| :------- | :------- | :--------------------------------- |
+| time     | datetime | Time in ISO8601 format             |
+| lat      | deg      | Latitude                           |
+| lon      | deg      | Longitude                          |
+| hMSL     | m        | Height above mean sea level        |
+| velN     | m/s      | NED north velocity                 |
+| velE     | m/s      | NED east velocity                  |
+| velD     | m/s      | NED down velocity                  |
+| hAcc     | m        | Horizontal Accuracy Estimate       |
+| vAcc     | m        | Vertical Accuracy Estimate         |
+| sAcc     | m/s      | Speed Accuracy Estimate            |
+| heading  | deg      | Heading of motion 2-D              |
+| cAcc     | deg      | Course / Heading Accuracy Estimate |
+| gpsFix   | -        | GPSfix Type (3 = 3D)               |
+| numSV    | -        | # of satellites following.         |
 
 </td><td>
 
-| **Name**   | **Unit**  | **Description**                               |
-|:-----------|:----------|:----------------------------------------------|
-| time       | datetime  | Time in ISO8601 format                        |
-| lat        | deg       | Latitude                                      |
-| lon        | deg       | Longitude                                     |
-| hMSL       | m         | Height above mean sea level                   |
-| velN       | m/s       | NED north velocity                            |
-| velE       | m/s       | NED east velocity                             |
-| velD       | m/s       | NED down velocity                             |
-| hAcc       | m         | Horizontal Accuracy Estimate                  |
-| vAcc       | m         | Vertical Accuracy Estimate                    |
-| sAcc       | m/s       | Speed Accuracy Estimate                       |
-| numSV      | -         | # of satellites following.                    |
-| -          | -         | -                                             |
-| -          | -         | -                                             |
-| -          | -         | -                                             |
+| **Name** | **Unit** | **Description**              |
+| :------- | :------- | :--------------------------- |
+| time     | datetime | Time in ISO8601 format       |
+| lat      | deg      | Latitude                     |
+| lon      | deg      | Longitude                    |
+| hMSL     | m        | Height above mean sea level  |
+| velN     | m/s      | NED north velocity           |
+| velE     | m/s      | NED east velocity            |
+| velD     | m/s      | NED down velocity            |
+| hAcc     | m        | Horizontal Accuracy Estimate |
+| vAcc     | m        | Vertical Accuracy Estimate   |
+| sAcc     | m/s      | Speed Accuracy Estimate      |
+| numSV    | -        | # of satellites following.   |
+| -        | -        | -                            |
+| -        | -        | -                            |
+| -        | -        | -                            |
 
 </td></tr> </table>
-
 
 The FlySight2 includes supplementary sensor data, comprising the following information:
 

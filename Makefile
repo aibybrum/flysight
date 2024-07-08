@@ -6,17 +6,17 @@ help:
 	@echo "Please use 'make <target>' where <target> is one of"
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z\._-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
+c: copy
+copy: ## Copy the example-environement file
+	@cp env/.env-example env/.env
+
 venv: venv-mac
-venv-mac: ## Create Local python virtual environment for mac
+venv-mac: ## Create Local API python virtual environment for mac
 	@echo "Creating Python virtual environment..."
 	@python3 -m venv .venv
 	@echo "Activating virtual environment..."
 	@source .venv/bin/activate && \
-		pip install -r env/requirements.txt
-
-c: copy
-copy: ## Copy the example-environement file
-	@cp env/.env-example env/.env
+		pip install -r api/requirements.txt
 
 dc: docker-compose-up
 docker-compose-up: ## Start Docker Compose
@@ -34,9 +34,3 @@ start-api: ## Start SWOOPAPI Locally
 		source .venv/bin/activate && \
 		cd api && \
 		uvicorn app.main:app --host 0.0.0.0 --port 5000
-
-# sn: start-notebook
-# start-notebook: ## Start Jupyter Notebook Locally
-# 	@echo "Starting Jupyter Notebook"
-# 	@source .venv/bin/activate && \
-# 		jupyter notebook
