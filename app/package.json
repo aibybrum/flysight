@@ -22,6 +22,7 @@
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "angular-plotly.js": "^5.2.2",
     "bootstrap": "^5.3.3",
+    "braces": "^3.0.3",
     "compass-mixins": "^0.12.12",
     "plotly.js-dist-min": "^2.30.1",
     "rxjs": "~7.8.0",
