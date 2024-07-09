@@ -1,75 +1,66 @@
-# Introducing the Sw00pGenerator3000 (SG3K) - Your Ultimate Swooping Companion!
-
-<br/>
+# Sw00pGenerator3000 (SG3K)
 
 The Sw00pGenerator3000, or SG3K, is a cutting-edge GPS analysis tool meticulously crafted to empower swoopers at every level of expertise. Whether you're taking your first plunge into the exhilarating world of swooping or you're a seasoned competitor seeking continuous improvement, the SG3K is your key to accelerating your learning curve. With this advanced tool, you can make remarkable progress in refining your performance while minimizing the number of jumps needed.
 
-<br/>
+But wait, what's swooping without FlySight? FlySight is not your ordinary GPS; it's tailor-made for wingsuit pilots and introduces a revolutionary feature. Providing real-time audible indications of glide ratio, horizontal, or vertical speed, FlySight takes your flying experience to new heights. For more detailed information on FlySight, check out this [link](https://github.com/flysight/flysight). Thanks to the flysight we can visualize our swoop and get the following information out of it.
 
-![flysight](./notebook/img/product2.jpg)
+## Flight Analysis Metrics
 
-<br/>
+The Sw00pGenerator3000 provides a comprehensive set of metrics to help you refine your swooping skills. Below are the key performance indicators for your recent flight:
 
-But wait, what's swooping without FlySight? FlySight is not your ordinary GPS; it's tailor-made for wingsuit pilots and introduces a revolutionary feature. Providing real-time audible indications of glide ratio, horizontal, or vertical speed, FlySight takes your flying experience to new heights. For more detailed information on FlySight, check out this [link](https://github.com/flysight/flysight).
+```
+exited airplane:      8505.2 ft AGL
+initiated turn:       474.1 ft AGL, 22.4 m back, -108.9 m offset
+max vertical speed:   141.0 ft AGL, 82.6 m back, -33.3 m offset (78.0 km/u)
+started rollout:      141.0 ft AGL, 82.6 m back, -33.3 m offset (78.0 km/u)
+finished rollout:     0.0 ft AGL, 0.0 m back, 0.0 m offset
+max horizontal speed: 24.8 ft AGL, 47.5 m back, -13.3 m offset (87.8 km/u)
 
-Now, let's talk about FlySight 2 - a complete redesign that builds on the success of its predecessor. Featuring real-time audible feedback using tones and speech, you can review your jump data using the same applications you loved with FlySight 1. The new FlySight 2 boasts additional enhancements, including a water-resistant case (IP67), a more powerful processor with Bluetooth Low Energy radio, and extra sensors (acceleration, rotation, orientation, pressure, humidity, temperature) for a comprehensive analysis of your flight. With improved audio and the convenience of USB C, FlySight 2 takes your swooping experience to the next level.
+degrees of rotation:      ---- deg (--- -hand)
+time to execute turn:     7.2 sec
+time during rollout:      4.2 sec
+time aloft during swoop:  5.4 sec
 
-For those who crave the technical details, let's take a peek into the comparison of FlySight Gen1 and FlySight Gen2 Track data:
+entry gate speed:      69 km/u
+distance to stop:      53 m
+```
 
-<br/>
+## Visualisations
 
-<table>
-<tr><th align="center">Flysight Gen1 - Track data</th><th align="center">Flysight Gen2 - Track data</th></tr>
+The Sw00pGenerator3000 provides a range of visualisations to help you gain a deeper understanding of your flight. These visualisations offer a detailed breakdown of your performance, allowing you to identify areas for improvement and refine your skills.
 
-<tr><td>
+### Overview
 
-| **Name** | **Unit** | **Description**                    |
-| :------- | :------- | :--------------------------------- |
-| time     | datetime | Time in ISO8601 format             |
-| lat      | deg      | Latitude                           |
-| lon      | deg      | Longitude                          |
-| hMSL     | m        | Height above mean sea level        |
-| velN     | m/s      | NED north velocity                 |
-| velE     | m/s      | NED east velocity                  |
-| velD     | m/s      | NED down velocity                  |
-| hAcc     | m        | Horizontal Accuracy Estimate       |
-| vAcc     | m        | Vertical Accuracy Estimate         |
-| sAcc     | m/s      | Speed Accuracy Estimate            |
-| heading  | deg      | Heading of motion 2-D              |
-| cAcc     | deg      | Course / Heading Accuracy Estimate |
-| gpsFix   | -        | GPSfix Type (3 = 3D)               |
-| numSV    | -        | # of satellites following.         |
+This provides a comprehensive overview of the maneuver, displaying elevation, horizontal speed, vertical speed, and the dive angle. Additionally, two vertical lines are incorporated to offer more information regarding the commencement and conclusion of the rollout.
 
-</td><td>
+![overview](notebook/img/overview.png)
 
-| **Name** | **Unit** | **Description**              |
-| :------- | :------- | :--------------------------- |
-| time     | datetime | Time in ISO8601 format       |
-| lat      | deg      | Latitude                     |
-| lon      | deg      | Longitude                    |
-| hMSL     | m        | Height above mean sea level  |
-| velN     | m/s      | NED north velocity           |
-| velE     | m/s      | NED east velocity            |
-| velD     | m/s      | NED down velocity            |
-| hAcc     | m        | Horizontal Accuracy Estimate |
-| vAcc     | m        | Vertical Accuracy Estimate   |
-| sAcc     | m/s      | Speed Accuracy Estimate      |
-| numSV    | -        | # of satellites following.   |
-| -        | -        | -                            |
-| -        | -        | -                            |
-| -        | -        | -                            |
+### Side View Of Flight Path
 
-</td></tr> </table>
+A profile view of the flight path: This perspective offers a clear observation of the landing's rollout, revealing the steepness and proximity to the gate during the approach. Additionally, it provides insight into the altitude at which the maneuver was initiated.
 
-The FlySight2 includes supplementary sensor data, comprising the following information:
+![sideview](notebook/img/sideview.png)
 
-- **BARO:** time(s), pressure(Pa), temperature(deg C)
-- **HUM:** time(s), humidity(percent), temperature(deg C)
-- **MAG:** time(s), x(gauss), y(gauss), z(gauss), temperature(deg C)
-- **IMU:** time(s), wx(deg/s), wy(deg/s), wz(deg/s), ax(g), ay(g), az(g), temperature(deg C)
-- **TIME:** time(s), tow(s), week
-- **VBAT:** time(s), voltage(volt)
+### Overhead View Of Flight Path
 
-It's important to note that as of now, this additional data is not utilized in the current application.
+Get a bird's-eye view of your flight trajectory, providing a unique perspective on your performance.
 
-For the comprehensive technical specifications FlySight 2, refer to the official documentation [link](https://content.u-blox.com/sites/default/files/products/documents/u-blox6_ReceiverDescrProtSpec_%28GPS.G6-SW-10018%29_Public.pdf). Get ready to elevate your swooping experience with the SG3K and FlySight 2 - the perfect duo for soaring to new heights!
+![overhead](notebook/img/overhead.png)
+
+### Map
+
+See your flight trajectory overlaid on satellite imagery, giving you a real-world perspective on your flight.
+
+![map](notebook/img/map.png)
+
+### Horizontal Speed
+
+This plot illustrates your horizontal speed throughout the maneuver, helping you identify areas where you can improve your speed and agility.
+
+![speed](notebook/img/speed.png)
+
+## License
+
+[![CC0](https://licensebuttons.net/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/)
+
+To the extent possible under law, [Bram Langmans](https://mts.io) has waived all copyright and related or neighboring rights to this work.
