@@ -1,49 +1,83 @@
-# Angular commands to remember
+# Angular
 
-## Installation
+### Check node.js version
 
-// node.js version
+```
 node -v
+```
 
-// angular version
+### Check angular version
+
+```
 ng version
+```
 
-// install
+### Install angular
+
+```
 npm install -g @angular/cli
+```
 
-// update
+### Update angular
+
+```
 npm install -g @angular/cli@latest
+```
 
-// creating new app
+### Check vulnerabilities
+
+```
+npm audit
+```
+
+### Creating new app
+
+```
 ng new app
 or
 ng new app --no-standalone
+```
 
-// install plotly packages
+### Install plotly packages
+
+```
 npm install angular-plotly.js plotly.js-dist-min --save
 npm install @types/plotly.js-dist-min --save-dev
+```
 
-//adding bootstrap
+### Adding bootstrap
+
+```
 npm install bootstrap
 ng add @ng-bootstrap/ng-bootstrap
+```
 
 https://www.hvdig.us/angular-agency/angular-bootstrap-adding-bootstrap-to-an-angular-application
 
-// Icons
-@mdi/font
+### Icons
 
-// start app
+```
+@mdi/font
+```
+
+### Start app
+
+```
 ng serve / npm start
+```
 
 ## Creating stuff
 
+```
 ng generate component <component-name>
 ng generate service <service-name>
 ng generate module <module-name>
 ng generate interface models/<interface-name>
+```
 
 ## Component Overview
 
+```
 /my-app
 |-- node_modules
 |-- src
@@ -97,6 +131,7 @@ ng generate interface models/<interface-name>
 | |-- main.ts
 | |-- styles.css
 |-- package.json
+```
 
 # Customising Bootstrap
 
