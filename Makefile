@@ -8,29 +8,24 @@ help:
 
 c: copy
 copy: ## Copy the example-environement file
-	@cp env/.env-example env/.env
+	@cp .env-example .env
 
-venv: venv-mac
-venv-mac: ## Create Local API python virtual environment for mac
-	@echo "Creating Python virtual environment..."
-	@python3 -m venv .venv
-	@echo "Activating virtual environment..."
-	@source .venv/bin/activate && \
-		pip install -r api/requirements.txt
+venv: ## Create Local virtual environment and install packages
+	@echo "Creating Python virtual environment and installing packages..."
+	@poetry install --only api, scraper
 
 dc: docker-compose-up
 docker-compose-up: ## Start Docker Compose
 	@echo "Starting Docker Compose"
-	@sed 's/ENVIRONMENT=dev/ENVIRONMENT=docker/' env/.env > .env.tmp && \
-		mv .env.tmp env/.env && \
+	@sed 's/ENVIRONMENT=dev/ENVIRONMENT=docker/' .env > .env.tmp && \
+		mv .env.tmp .env && \
 		docker-compose up -d
 
 sa: start-api
 start-api: ## Start SWOOPAPI Locally
 	@echo "Starting SWOOPAPI"
 	@docker-compose up -d influxdb postgres
-	@sed 's/ENVIRONMENT=docker/ENVIRONMENT=dev/' env/.env > .env.tmp && \
-		mv .env.tmp env/.env && \
-		source .venv/bin/activate && \
+	@sed 's/ENVIRONMENT=docker/ENVIRONMENT=dev/' .env > .env.tmp && \
+		mv .env.tmp .env && \
 		cd api && \
-		uvicorn app.main:app --host 0.0.0.0 --port 5000
+		poetry run uvicorn app.main:app --host 0.0.0.0 --port 5000 --log-level debug

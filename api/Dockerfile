@@ -1,26 +1,24 @@
-# Stage 1: build environment
-FROM python:3.10-slim-buster AS build-env
+FROM python:3.9 as requirements-stage
 
-WORKDIR /app
+WORKDIR /tmp
 
-COPY requirements.txt ./
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get -y install --no-install-recommends libpq-dev build-essential && \
-    pip install --no-cache-dir --prefix=/install -r requirements.txt && \
-    rm -rf /root/.cache /usr/local/lib/python3.10/site-packages/__pycache__
+RUN pip install poetry
 
-COPY ./ ./
+COPY ./pyproject.toml ./poetry.lock* /tmp/
 
-# Stage 2: production environment
-FROM python:3.10-slim-buster AS dev-env
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --only api
 
-WORKDIR /app
 
-RUN apt-get update && \
-    apt-get -y install --no-install-recommends libpq5 && \
-    rm -rf /var/lib/apt/lists/*
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 
-COPY --from=build-env /install /usr/local
-COPY --from=build-env /app ./
+WORKDIR /app/api
 
-CMD ["uvicorn", "app.main:app", "--host=0.0.0.0", "--port=80"]
+COPY --from=requirements-stage /tmp/requirements.txt /app/api/requirements.txt
+
+RUN pip install --no-cache-dir --upgrade -r /app/api/requirements.txt
+
+COPY ./api /app/api
+
+EXPOSE 80
+
+CMD ["uvicorn", "api.app.main:app", "--host", "0.0.0.0", "--port", "80"]

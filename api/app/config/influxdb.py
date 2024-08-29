@@ -4,10 +4,11 @@ from influxdb_client import InfluxDBClient
 from dotenv import load_dotenv
 from pathlib import Path
 
-dotenv_path = Path('./../env/.env')
+dotenv_path = Path('./../.env')
 load_dotenv(dotenv_path=dotenv_path)
 
 environment = os.getenv('ENVIRONMENT')
+print(f"Environment => {environment}")
 url = ''
 if environment == 'dev':
     url = "http://localhost:8086/"
