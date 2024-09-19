@@ -1,8 +1,11 @@
 from selenium import webdriver
 
 driver = webdriver.Chrome()
-driver.get("https://wingsuit.world/dropzones/")
+url = "https://wingsuit.world/dropzones/"
 
-l = driver.find_elements_by_xpath ("//*[@class= 'dataTable']/tbody/tr")
-print(len(l)) 
-driver.quit()
+table_XPath = '//tbody/'
+
+driver.get(url)
+number_of_entries = driver.find_element(by='xpath', value="//div[@id='tablepress-14_info']").text
+assert "241 entries" in number_of_entries
+print(number_of_entries)

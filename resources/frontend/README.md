@@ -24,10 +24,11 @@ npm install -g @angular/cli
 npm install -g @angular/cli@latest
 ```
 
-### Check vulnerabilities
+### Check and fix vulnerabilities
 
 ```
 npm audit
+npm audit fix
 ```
 
 ### Creating new app

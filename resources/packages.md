@@ -24,3 +24,13 @@ poetry env list
 poetry shell
 
 exit - deactivate
+
+## Visualisation packages
+
+- matplotlib
+- seaborn
+- plotly (mostly used) -> interactive
+- mapbox 
+- leafmap
+- pydeck
+- keplergl
