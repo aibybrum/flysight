@@ -10,14 +10,14 @@ To successfully use the Sw00pGenerator3000, you'll need the following:
 
 - **Make**: A build automation tool to manage the build process.
 - **Docker**: A platform for developing, shipping, and running applications in containers.
-- **Mapbox token**: An access token for using Mapbox services, required for some of the visualisation functionalities.
+- **Mapbox token**: An access token for using Mapbox services, required for some of the visualisation features.
 
-## How to 
+## Steps to Get Started 
 
 1. Clone this repository
-2. Execute 'make copy' or 'make c' to generate an .env file
-3. Enter your Mapbox token in the .env file
-4. Run 'make docker-compose-up' or 'make dc'
+2. Execute **'make copy'** or **'make c'** to generate an **.env** file
+3. Enter your Mapbox token in the **.env** file
+4. Run **'make docker-compose-up'** or **'make dc'**
 5. Navigate to http://localhost:8888/lab/tree/notebook/sg3k_pro.ipynb and follow the instructions in the notebook
 
 ## Flight Analysis Metrics
