@@ -13,6 +13,9 @@ python-multipart loguru "pydantic[email]" --group api
 poetry add numpy pandas plotly peakutils geopy pyproj utm seaborn pyarrow \
 python-dotenv panel ipywidgets import-ipynb --group notebook
 
+//added this later to save the plots into images
+poetry add kaleido==0.2.1 --group notebook
+
 ## Add Scraper dependencies
 
 poetry add selenium --group scraper
