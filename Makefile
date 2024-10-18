@@ -10,7 +10,7 @@ c: copy
 copy: ## Copy the example-environement file
 	@cp .env-example .env
 
-venv: ## Create Local virtual environment and install packages
+venv: ## Create Local virtual environment for development and install packages
 	@echo "Creating Python virtual environment and installing packages..."
 	@poetry install --only api, scraper
 

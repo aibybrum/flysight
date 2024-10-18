@@ -4,25 +4,42 @@ The Sw00pGenerator3000, or SG3K, is a cutting-edge GPS analysis tool meticulousl
 
 But wait, what's swooping without FlySight? FlySight is not your ordinary GPS; it's tailor-made for wingsuit pilots and introduces a revolutionary feature. Providing real-time audible indications of glide ratio, horizontal, or vertical speed, FlySight takes your flying experience to new heights. For more detailed information on FlySight, check out this [link](https://github.com/flysight/flysight). Thanks to the flysight we can visualize our swoop and get the following information out of it.
 
+## Requirements
+
+To successfully use the Sw00pGenerator3000, you'll need the following:
+
+- **Make**: A build automation tool to manage the build process.
+- **Docker**: A platform for developing, shipping, and running applications in containers.
+- **Mapbox token**: An access token for using Mapbox services, required for some of the visualisation functionalities.
+
+## How to 
+
+1. Clone this repository
+2. Execute 'make copy' or 'make c' to generate an .env file
+3. Enter your Mapbox token in the .env file
+4. Run 'make docker-compose-up' or 'make dc'
+5. Navigate to http://localhost:8888/lab/tree/notebook/sg3k_pro.ipynb and follow the instructions in the notebook
+
 ## Flight Analysis Metrics
 
 The Sw00pGenerator3000 provides a comprehensive set of metrics to help you refine your swooping skills. Below are the key performance indicators for your recent flight:
 
 ```
-exited airplane:      8505.2 ft AGL
-initiated turn:       474.1 ft AGL, 22.4 m back, -108.9 m offset
-max vertical speed:   141.0 ft AGL, 82.6 m back, -33.3 m offset (78.0 km/u)
-started rollout:      141.0 ft AGL, 82.6 m back, -33.3 m offset (78.0 km/u)
-finished rollout:     0.0 ft AGL, 0.0 m back, 0.0 m offset
-max horizontal speed: 24.8 ft AGL, 47.5 m back, -13.3 m offset (87.8 km/u)
+exited airplane:      5728.9 ft AGL
+toggle search:        828.3 ft AGL, 83.2 m back, -102.2 m offset
+initiated turn:       777.9 ft AGL, 81.3 m back, -68.9 m offset
+max vertical speed:   185.0 ft AGL, 94.7 m back, -37.3 m offset (95.0 km/u)
+started rollout:      151.0 ft AGL, 92.1 m back, -32.8 m offset (91.3 km/u)
+finished rollout:     2.2 ft AGL, 0.0 m back, 0.0 m offset
+max horizontal speed: 29.9 ft AGL, 49.1 m back, -15.7 m offset (86.5 km/u)
 
 degrees of rotation:      ---- deg (--- -hand)
-time to execute turn:     7.2 sec
-time during rollout:      4.2 sec
-time aloft during swoop:  5.4 sec
+time to execute turn:     15.4 sec
+time during rollout:      4.6 sec
+time aloft during swoop:  7.0 sec
 
-entry gate speed:      69 km/u
-distance to stop:      53 m
+entry gate speed:      65.2 km/u
+distance to stop:      52.77 m
 ```
 
 ## Visualisations
@@ -58,9 +75,3 @@ See your flight trajectory overlaid on satellite imagery, giving you a real-worl
 This plot illustrates your horizontal speed throughout the maneuver, helping you identify areas where you can improve your speed and agility.
 
 ![speed](notebook/img/speed.png)
-
-## License
-
-[![CC0](https://licensebuttons.net/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/)
-
-To the extent possible under law, [Bram Langmans](https://mts.io) has waived all copyright and related or neighboring rights to this work.
